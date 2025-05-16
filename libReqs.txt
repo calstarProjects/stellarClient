@@ -1,0 +1,4 @@
+keyboard
+pyautogui
+pygame
+PyQt5
