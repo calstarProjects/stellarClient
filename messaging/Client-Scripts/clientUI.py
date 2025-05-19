@@ -102,13 +102,24 @@ class UI:
                 # otherwise set it to green
             else:
                 timeText = f"[green]{hour}:{minute}:{second} {ap}[/green]"
-            OCP = (self.ActiveChatters/self.TotalChatters)
-            OFP = (self.ActiveFriends/self.TotalFriends)
-            # if the percentage of online users is 0-5% set fraction to red
-            # if the percentage of online users is 5-35% set fraction to orange
-            # if the percentage of online users is 35-65% set fraction to yellow
-            # if the percentage of online users is 65-80% set fraction to light yellow
-            # if the percentage of online users is 80-100% set fraction to green
+            OCP = (self.ActiveChatters/self.TotalChatters)*100
+            OFP = (self.ActiveFriends/self.TotalFriends)*100
+            if OCP >= 0 and OCP < 5:
+                # if the percentage of online users is 0-4% set fraction to red
+                
+                pass
+            elif OCP > 4 and OCP < 36:
+               # if the percentage of online users is 5-35% set fraction to orange
+               pass
+            elif OCP > 35 and OCP > 66:
+                # if the percentage of online users is 35-65% set fraction to yellow
+                pass
+            elif OCP > 64 and OCP < 80:
+                # if the percentage of online users is 65-80% set fraction to light yellow
+                pass
+            else:
+                # if the percentage of online users is 80-100% set fraction to green
+                pass
             # all of that also goes for the amount of active friends
             finalStr = datetext+"@"+timeText
         return finalStr
