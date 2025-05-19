@@ -1,5 +1,21 @@
-# import tkinter.messagebox
-# import tkinter.simpledialog
+"""This is the main program that runs the Stellar Client
+
+Functions: 
+
+- Keyboard manipulation:
+    - Autoclickers, other macros, keylogger if you want to?
+
+- Games:
+    - For now, just a rougelike game
+
+In Progress:
+
+- Messaging
+- More Games    
+
+"""
+
+
 import sys
 import pyautogui
 from keylogger import keyLog, keyLogPrint
@@ -9,26 +25,6 @@ from gameScreen import *
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
 from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
-# chosenQ = False
-# options = ['Encoder', 'Keylogger', 'Macro', 'Game 1', 'Cancel']
-# while not chosenQ:
-#     choice = tkinter.simpledialog.askstring('Action Choice', 'Chose which function to run')
-#     if choice in options:
-#         chosenQ = True
-#     else:
-#         tkinter.messagebox.showerror('Invalid Choice', 'Options are: Encoder, Keylogger, Macro, Game 1, Cancel')
-# match choice:
-#     case 'Encoder':
-#         if tkinter.messagebox.askyesno('Encoder', 'Would you like to encode?'):
-#             encode()
-#         if tkinter.messagebox.askyesno('Encoder', 'Would you like to decode?'):
-#             decode()
-#     case 'Keylogger':
-#         keyLog(tkinter.simpledialog.askstring('Keylogger', 'What endkey?'))
-#     case 'Macro':
-#         runMacroChoice()
-#     case 'Game 1':
-#         import gameOne
 
 screenwidth, screenlength = pyautogui.size()
 

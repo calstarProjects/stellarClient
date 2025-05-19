@@ -165,12 +165,12 @@ def initGameOne():
             # protectSprite.setPos(ceru.rect.centerx, ceru.rect.centery)
             protectSprite.setVisible(True)
             protecting = True
-            print('protecting start: ', protecting)
+            # print('protecting start: ', protecting)
         elif keyboard.is_pressed('space') and (ceruProtectUses == 0) and not protecting:
             ceruLabel.relabel('No Protect Uses')
         
         if protecting:
-            print('protecting: ', protecting, ', ', protectingItr, ', ', protectSprite.rect.width, ', ', protectSprite.rect.center, ', ', ceru.rect.center)
+            # print('protecting: ', protecting, ', ', protectingItr, ', ', protectSprite.rect.width, ', ', protectSprite.rect.center, ', ', ceru.rect.center)
             if protectingItr < 75:
                 protectingItr += 1
                 protectSprite.resize(protectingItr * 1.3 + 283, protectingItr * 1.3 + 283)
@@ -271,7 +271,7 @@ def initGameOne():
                 if ceru.hitsSprite(i):
                     ceru.setPos(ceru.rect.centerx, ceru.rect.centery + 150)
                     hitSprite = i
-                    print (i.name)
+                    # print (i.name)
             if hitSprite != '':
                 match hitSprite.name:
                     case 'healthUpgrade':
