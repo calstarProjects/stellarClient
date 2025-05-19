@@ -102,8 +102,8 @@ class UI:
                 # otherwise set it to green
             else:
                 timeText = f"[green]{hour}:{minute}:{second} {ap}[/green]"
-            OCP = self.ActiveChatters/self.TotalChatters
-            OFP = self.ActiveFriends/self.TotalFriends
+            OCP = (self.ActiveChatters/self.TotalChatters)
+            OFP = (self.ActiveFriends/self.TotalFriends)
             # if the percentage of online users is 0-5% set fraction to red
             # if the percentage of online users is 5-35% set fraction to orange
             # if the percentage of online users is 35-65% set fraction to yellow
