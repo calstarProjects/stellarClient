@@ -3,7 +3,8 @@
 # to make this universal we use a basic UI
 # if you have this in a controlable enviroment, then we use rich
 # for user input we use a seperate script
-import datetime
+import datetime, os
+os.system("cls")
 try:
     from rich.console import Console
     from rich.table import Table
@@ -12,24 +13,47 @@ except:
     print("Rich not installed, using basic UI")
     usingRich = False
     
-class UI:
+class RichUI:
     def __init__(self, GCs, Friends):
         self.ActiveChatters = 10
-        self.ActiveFriends = 11
-        self.TotalFriends = 30
-        self.TotalChatters = 15
-        if usingRich == True:
-            # start rich table and console
-            MainTable = Table()
-            MainConsole = Console()
-            # add stuff to rich and the table
-            MainTable.add_column(self.getTopText())
-            MainTable.add_column("   Chats:     ")
-            # output to rich console
-            MainConsole.print(MainTable)
-        else:
-            pass
+        self.ActiveFriends = 10
+        self.TotalFriends = 100
+        self.TotalChatters = 100
+        
+        self.RowCap = 15
+        # example message chain
+        self.messages = [
+            {"UserID":"TBD",
+             "UserDisplayName":"Head Dev",
+             "Message":"WHY THE FUCCC IS THE CODE NOT WORKING"},
+            {"UserID":"TBD",
+             "UserDisplayName":"Freshie #1",
+             "Message":"It worked fine for me. Seems like an issue not an ishme."}
+        ]
+        # start rich table and console
+        MainTable = Table()
+        MainConsole = Console()
+        # add stuff to rich and the table
+        MainTable.add_column(self.getTopText())
+        MainTable.add_column("   Chats:     ")
+        MainTable.add_column("   Friends:   ")
+        #   chat messages-\/  GC info-\/   friend info-\/
+        MainTable.add_row("", "Today:",          "Head Dev")
+        MainTable.add_row("", "────────────────","")
+        MainTable.add_row("", "Robotics GC",     "")
+        MainTable.add_row("", "12/20 Active",    "────────────────")
+        MainTable.add_row("", "Head Dev@11:59p", "")
+        MainTable.add_row("", "────────────────","────────────────")
+        MainTable.add_row("", "This week:",      "")
+        MainTable.add_row("", "────────────────","")
+        # output to rich console
+        MainConsole.print(MainTable)
+    def generateRows(self):
+        row_data = []
+        pass
+    # needs testing
     def getTopText(self):
+        # obtain and format datetime data
         now = datetime.datetime.now()
         year = now.strftime("%Y")
         month = now.strftime("%b")
@@ -106,22 +130,36 @@ class UI:
             OFP = (self.ActiveFriends/self.TotalFriends)*100
             if OCP >= 0 and OCP < 5:
                 # if the percentage of online users is 0-4% set fraction to red
-                
-                pass
+                ACT = f"[red]{self.ActiveChatters}[/red]/{self.TotalChatters}"
             elif OCP > 4 and OCP < 36:
                # if the percentage of online users is 5-35% set fraction to orange
-               pass
+               ACT = f"[orange3]{self.ActiveChatters}[/orange3]/{self.TotalChatters}"
             elif OCP > 35 and OCP > 66:
                 # if the percentage of online users is 35-65% set fraction to yellow
-                pass
+                ACT = f"[yellow]{self.ActiveChatters}[/yellow]/{self.TotalChatters}"
             elif OCP > 64 and OCP < 80:
                 # if the percentage of online users is 65-80% set fraction to light yellow
-                pass
+                ACT = f"[light_yellow]{self.ActiveChatters}[/light_yellow]/{self.TotalChatters}"
             else:
                 # if the percentage of online users is 80-100% set fraction to green
-                pass
+                ACT = f"[green]{self.ActiveChatters}[/green]/{self.TotalChatters}"
             # all of that also goes for the amount of active friends
-            finalStr = datetext+"@"+timeText
+            if OFP >= 0 and OFP < 5:
+                # red
+                AFT = f"[red]{self.ActiveFriends}[/red]/{self.TotalFriends}"
+            elif OFP > 4 and OFP < 36:
+                # orange
+                AFT = f"[orange3]{self.ActiveFriends}[/orange3]/{self.TotalFriends}"
+            elif OFP > 35 and OFP < 66:
+                # yellow
+                AFT = f"[yellow]{self.ActiveFriends}[/yellow]/{self.TotalFriends}"
+            elif OCP > 64 and OCP < 80:
+                # light yellow
+                AFT = f"[light_yellow]{self.ActiveFriends}[/light_yellow]/{self.TotalFriends}"
+            else:
+                # green
+                AFT = f"[green]{self.ActiveFriends}[/green]/{self.TotalFriends}"
+            finalStr = f"{datetext}@{timeText} Active Chatters:{ACT} Active Friends: {AFT}"
         return finalStr
     
-UI([],[])
+RichUI([],[])
