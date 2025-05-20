@@ -91,4 +91,4 @@ if __name__ in "__main__":
     app = QApplication([])
     main = stellarClientWidget()
     main.show()
-    sys.exit(app.exec_())
+    app.exec_()
