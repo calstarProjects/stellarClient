@@ -62,6 +62,7 @@ class gameWidget(QWidget):
     def gameOneRun(self):
         runGameOne()
         print('game1ing')
+        self.__init__()
 
 
 # if __name__ in "__main__":
