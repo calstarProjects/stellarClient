@@ -19,7 +19,7 @@ In Progress:
 import sys
 import pyautogui
 from keylogger import keyLog, keyLogPrint
-from macros import runMacroChoice
+from macros import macroWidget, getInfo
 from encoder import encode, decode
 from gameScreen import *
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
@@ -31,12 +31,13 @@ screenwidth, screenlength = pyautogui.size()
 class stellarClientWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.loadUi()
+        self.loadUI()
         self.settings()
         self.gamesWindow = None
+        self.keyboardWindow = None
         self.buttonEvents()
 
-    def loadUi(self):
+    def loadUI(self):
         self.title = QLabel('Stellar Client')
         self.subtitle = QLabel('Your app for everything')
         self.applicationsLabel = QLabel('Applications')
@@ -80,11 +81,13 @@ class stellarClientWidget(QWidget):
         self.gamesWindow.show()
 
     def keyboardButton(self):
-        pass
+        if self.keyboardWindow == None:
+            self.keyboardWindow = macroWidget()
+        self.keyboardWindow.show()
 
 
 if __name__ in "__main__":
     app = QApplication([])
     main = stellarClientWidget()
     main.show()
-    sys.exit(app.exec_())
+    app.exec_()
