@@ -9,7 +9,7 @@ import tkinter
 root = tkinter.Tk()
 root.withdraw()
 root.attributes('-topmost', True)
-root.update
+root.update()
 
 def runMacroChoice():
     chosenMacro = ''

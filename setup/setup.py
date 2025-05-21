@@ -54,7 +54,7 @@ if __name__ == "__main__":
         if os.path.exists(main_script_name):
             print(f"\nTo run the application, first activate the virtual environment:")
             if sys.platform == "win32":
-                print(f"  source {venv_name}\\Scripts\\activate")
+                print(f" .\\{venv_name}\\Scripts\\activate")
             else:
                 print(f"  source {venv_name}/bin/activate")
             print(f"Then, run your main script:")
