@@ -1,38 +1,68 @@
-import socket
+# server.py
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
+import json
 
-HOST = '127.0.0.1'
-PORT = 65432
-connections = []
+HOST = 'stellar.mnasarchive.org'  # Replace with your server's hostname or IP
+PORT = 8080
 
-def handle_client(conn, addr):
-    print(f"Connected by {addr}")
-    connections.append(conn)
+class ThreadedHTTPServer(HTTPServer, threading.Thread):
+    """Handle requests in separate threads."""
+    allow_reuse_address = True
+
+class RequestHandler(BaseHTTPRequestHandler):
+    # shared, thread-safe list of messages
+    messages = []
+    lock = threading.Lock()
+
+    def _set_headers(self, status=200, content_type='application/json'):
+        self.send_response(status)
+        self.send_header('Content-Type', content_type)
+        self.end_headers()
+
+    def do_POST(self):
+        # Endpoint to receive a message
+        if self.path == '/message':
+            length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(length)
+            try:
+                data = json.loads(body)
+                msg = data.get('message', '')
+                addr = self.client_address
+                with RequestHandler.lock:
+                    RequestHandler.messages.append({'from': addr, 'message': msg})
+                print(f"Received from {addr}: {msg}")
+                self._set_headers()
+                self.wfile.write(json.dumps({'status': 'ok'}).encode('utf-8'))
+            except json.JSONDecodeError:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({'error': 'Invalid JSON'}).encode('utf-8'))
+        else:
+            self._set_headers(404)
+            self.wfile.write(json.dumps({'error': 'Not found'}).encode('utf-8'))
+
+    def do_GET(self):
+        # Endpoint to fetch all messages
+        if self.path == '/messages':
+            with RequestHandler.lock:
+                msgs = list(RequestHandler.messages)
+            self._set_headers()
+            self.wfile.write(json.dumps({'messages': msgs}).encode('utf-8'))
+        else:
+            self._set_headers(404)
+            self.wfile.write(json.dumps({'error': 'Not found'}).encode('utf-8'))
+
+    def log_message(self, format, *args):
+        # suppress default logging
+        return
+
+if __name__ == '__main__':
+    server = ThreadedHTTPServer((HOST, PORT), RequestHandler)
+    print(f"HTTP server running on http://{HOST}:{PORT}")
     try:
-        while True:
-            data = conn.recv(1024)
-            if not data:
-                break
-            message = data.decode('utf-8').strip()
-            print(f"Received from {addr}: {message}")
-            for client_conn in connections:
-                if client_conn != conn:
-                    try:
-                        client_conn.sendall(f"{addr[0]}:{addr[1]}: {message}".encode('utf-8'))
-                    except:
-                        connections.remove(client_conn)
-            if message.lower() == 'quit':
-                break
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
     finally:
-        connections.remove(conn)
-        conn.close()
-        print(f"Connection closed with {addr}")
-
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
-    s.listen()
-    print(f"Server listening on {HOST}:{PORT}")
-    while True:
-        conn, addr = s.accept()
-        thread = threading.Thread(target=handle_client, args=(conn, addr))
-        thread.start()
+        server.server_close()
+        print("Server stopped")
