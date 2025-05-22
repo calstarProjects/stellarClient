@@ -189,7 +189,7 @@ class Ui_MainWindow(QtCore.QObject):
         self.ActiveChatters.setText(_translate("MainWindow", "Active Chatters: 12/15"))
         self.ActiveFriends.setText(_translate("MainWindow", "Active Friends: 20/30"))
         self.Chats.setText(_translate("MainWindow", "Chats:"))
-        self.Friends.setText(_translate("MainWindow", "Freinds:"))
+        self.Friends.setText(_translate("MainWindow", "Friends:"))
     
     def eventFilter(self, obj, event):
         if obj == self.MessageArea and event.type() == QtCore.QEvent.KeyPress:
