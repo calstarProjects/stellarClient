@@ -14,23 +14,41 @@
 # func to refresh the chats list
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
+import keyboard
+import time
+import pyautogui
+import threading
+import string
 
+class Ui_MainWindow(QtCore.QObject):
+    def __init__(self, mainWindow):
+        super().__init__()
+        self.setupUi(mainWindow)
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.periodic)
+        self.timer.start(500)
+        self.messages = []
+        self.latestMessage = ''
+        self.chatModel = QtCore.QStringListModel()
+        self.ChatMessages.setModel(self.chatModel)
+        self.currentChatList = self.chatModel.stringList()
+        self.appRunning = 1
 
-class Ui_MainWindow(object):
-    def __init__(self):
-        # define general use vars
-        # sets the scale factor (default is 3)
-        self.ScaleFactor = 3
     def setupUi(self, MainWindow):
+        # sets the scale factor (default is 3)
+        self.ScaleFactor = 5
+    
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(562*self.ScaleFactor, 343*self.ScaleFactor)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.ChatList = QtWidgets.QListView(self.centralwidget)
-        self.ChatList.setGeometry(QtCore.QRect(-5*self.ScaleFactor, 10*self.ScaleFactor, 376*self.ScaleFactor, 256*self.ScaleFactor))
-        self.ChatList.setObjectName("ChatList")
+        self.ChatMessages = QtWidgets.QListView(self.centralwidget)
+        self.ChatMessages.setGeometry(QtCore.QRect(-5*self.ScaleFactor, 10*self.ScaleFactor, 376*self.ScaleFactor, 256*self.ScaleFactor))
+        self.ChatMessages.setObjectName("ChatList")
         self.HeaderLabel = QtWidgets.QLabel(self.centralwidget)
         self.HeaderLabel.setGeometry(QtCore.QRect(0, 0, 150*self.ScaleFactor, 11*self.ScaleFactor))
+        
         self.HeaderLabel.setObjectName("HeaderLabel")
         self.ChatsList = QtWidgets.QListView(self.centralwidget)
         self.ChatsList.setGeometry(QtCore.QRect(370*self.ScaleFactor, 10*self.ScaleFactor, 106*self.ScaleFactor, 291*self.ScaleFactor))
@@ -70,20 +88,82 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Stellar Client"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "StellarClientUI"))
         self.HeaderLabel.setText(_translate("MainWindow", "Mon Day Year@Hour:Minute:Second"))
         self.SendButton.setText(_translate("MainWindow", "Send"))
         self.ActiveChatters.setText(_translate("MainWindow", "Active Chatters: 12/15"))
         self.ActiveFriends.setText(_translate("MainWindow", "Active Friends: 20/30"))
         self.Chats.setText(_translate("MainWindow", "Chats:"))
         self.Friends.setText(_translate("MainWindow", "Freinds:"))
+    
+    def eventFilter(self, obj, event):
+        if obj == self.MessageArea and event.type() == QtCore.QEvent.KeyPress:
+            if event.key() in (QtCore.Qt.Key_Return, QtCore.Qt.Key_Enter):
+                if not (event.modifiers() & QtCore.Qt.ShiftModifier):
+                    self.getMessageBox()
+                    return True
+        return super().eventFilter(obj, event)
+
+    def getMessageBox(self):
+        message = self.MessageArea.toPlainText()
+        cont = False
+        for i in message:
+            if i in string.printable and i != ' ':
+                cont = True
+        if cont:
+            self.MessageArea.setPlainText('')
+            self.messages.append(message)
+            self.latestMessage = message
+            self.setChatBoxText(message)
+
+    def feedMessageData(self):
+        if keyboard.is_pressed('enter'):
+            self.getMessageBox()
+            time.sleep(0.01)
+            pyautogui.press('backspace')
+
+    def setChatBoxText(self, text: str):
+        # # newText = self.ChatMessages.text() + '\n' + text
+        # # self.ChatMessages.setText(newText)
+        self.currentChatList.append(text)
+        self.chatModel.setStringList(self.currentChatList)
+        self.ChatMessages.scrollToBottom()
+    
+    def timeUpdate(self):
+        # Get the current local time struct
+        current_time_struct = time.localtime()
+
+        # %m: Month as a zero-padded decimal number
+        # %d: Day of the month as a zero-padded decimal number
+        # %Y: Year with century as a decimal number
+        # %H: Hour (24-hour clock) as a zero-padded decimal number
+        # %M: Minute as a zero-padded decimal number
+        # %S: Second as a zero-padded decimal number
+        formatted_time = time.strftime("%m/%d/%Y, %H:%M:%S", current_time_struct)
+
+        self.HeaderLabel.setText(formatted_time)
+
+    def periodic(self):
+        self.timeUpdate()
+
+    def getMessageList(self):
+        return self.messages
+    
+    def getLatestMessage(self):
+        return self.latestMessage
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    ui = Ui_MainWindow(MainWindow)
+    # timeThread = threading.Thread(target=ui.timeUpdate)
+    # timeThread.start()
+    # messagesThread = threading.Thread(target=ui.feedMessageData)
+    # messagesThread.start()
     MainWindow.show()
-    sys.exit(app.exec_())
+    app.exec_()
+
+    ui.appRunning = 0
+    print(ui.messages)
