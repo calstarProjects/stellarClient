@@ -19,7 +19,7 @@ In Progress:
 import sys
 import pyautogui
 from keylogger import keyLog, keyLogPrint
-from macros import macroWidget, getInfo
+from keyboardScreen import keyboardWidget
 from encoder import encode, decode
 from gameScreen import *
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
@@ -47,6 +47,7 @@ class stellarClientWidget(QWidget):
         self.subtitle.setFont(QFont('Castellar', 25))
         self.title.setAlignment(QtCore.Qt.AlignCenter)
         self.subtitle.setAlignment(QtCore.Qt.AlignCenter)
+        self.applicationsLabel.setFont(QFont('Castellar', 20, 100))
         self.applicationsLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.master = QBoxLayout(2)
@@ -82,7 +83,7 @@ class stellarClientWidget(QWidget):
 
     def keyboardButton(self):
         if self.keyboardWindow == None:
-            self.keyboardWindow = macroWidget()
+            self.keyboardWindow = keyboardWidget()
         self.keyboardWindow.show()
 
 
