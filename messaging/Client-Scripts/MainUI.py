@@ -17,9 +17,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
+    def __init__(self):
+        # define general use vars
         # sets the scale factor (default is 3)
-        self.ScaleFactor = 5
+        self.ScaleFactor = 3
+    def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(562*self.ScaleFactor, 343*self.ScaleFactor)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -68,7 +70,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "StellarClientUI"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Stellar Client"))
         self.HeaderLabel.setText(_translate("MainWindow", "Mon Day Year@Hour:Minute:Second"))
         self.SendButton.setText(_translate("MainWindow", "Send"))
         self.ActiveChatters.setText(_translate("MainWindow", "Active Chatters: 12/15"))
