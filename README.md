@@ -4,7 +4,7 @@ Stellar Client is a Python Application for developers, with a bunch of tools and
 
 ## Installation
 
-Use the setup.py file and follow the instructions to initialize the project. (You need python somewhere on your machine)
+Use the `setup.py` file and follow the instructions to initialize the project. (You need python somewhere on your machine)
 
 ```bash
 python setup.py
@@ -12,7 +12,7 @@ python setup.py
 
 ## Usage
 
-Run the stellarClient.py file to start the app
+Run the `stellarClient.py` file to start the app
 
 ```bask
 localVenv\scripts\python.exe stellarClient.py
