@@ -31,4 +31,4 @@ Please make sure to update tests as appropriate.
 ## Acknowledgements
 
  - [Make a README](https://www.makeareadme.com/)
- - Sage, for arkwork for the games
+ - Sage, for artwork for the games
