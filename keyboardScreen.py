@@ -5,6 +5,7 @@ import threading
 # from encoder import encode, decode
 # from gameOne import initGameOne
 from macros import macroWidget
+from encoder import encodingWidget
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
 from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
@@ -16,6 +17,7 @@ class keyboardWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.macroScreen = None
+        self.encodeScreen = None
         self.loadUi()
         self.settings()
         self.buttonEvents()
@@ -59,11 +61,18 @@ class keyboardWidget(QWidget):
     
     def buttonEvents(self):
         self.macrosButton.clicked.connect(self.macroButton)
+        self.encodingButton.clicked.connect(self.encodeButton)
 
     def macroButton(self):
         if self.macroScreen == None:
             self.macroScreen = macroWidget()
         self.macroScreen.show()
+    
+    def encodeButton(self):
+        if self.encodeScreen == None:
+            self.macroScreen = encodingWidget()
+        self.macroScreen.show()
+
 
 
 # if __name__ in "__main__":
