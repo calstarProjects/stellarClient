@@ -20,7 +20,7 @@ localVenv\scripts\python.exe stellarClient.py
 
 ## Contributing
 
-Pull requests are welcome, but suject to a review by  moderators. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome, but subject to a review by  moderators. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
