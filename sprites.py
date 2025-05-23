@@ -22,7 +22,7 @@ if tkinter.messagebox.askyesno('Screen Setup', 'Would you like a custom window s
 else:
     screenWidth, screenHeight = pyautogui.size()
 
-print (screenWidth, screenHeight)
+# print (screenWidth, screenHeight)
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Sprite list for ticking

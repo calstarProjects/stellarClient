@@ -4,7 +4,6 @@ import threading
 # from macros import runMacroChoice
 # from encoder import encode, decode
 # from gameOne import initGameOne
-from runGameOne import runGameOne
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
 from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
@@ -60,8 +59,8 @@ class gameWidget(QWidget):
         self.gameOneButton.clicked.connect(self.gameOneRun)
 
     def gameOneRun(self):
-        runGameOne()
-        print('game1ing')
+        from gameOne import initGameOne
+        initGameOne()
         self.__init__()
 
 
