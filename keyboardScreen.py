@@ -7,6 +7,7 @@ import threading
 from macros import macroWidget
 from encoder import encodingWidget
 from computerStats import compStatsWidget
+from keylogger import keyLog
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
 from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
@@ -31,12 +32,14 @@ class keyboardWidget(QWidget):
         self.macrosButton = QPushButton('Macros')
         self.encodingButton = QPushButton('Encoding/Decoding')
         self.statsButton = QPushButton('Computer Stats')
+        self.keyloggerButton = QPushButton('Run Keylogger')
         self.title.setFont(QFont('Castellar', 25))
         self.subtitle.setFont(QFont('Castellar', 15))
         self.keyboardLabel.setFont(QFont('Castellar', 20, 100))
         self.macrosButton.setFont(QFont('Castellar', 15))
         self.encodingButton.setFont(QFont('Castellar', 15))
         self.statsButton.setFont(QFont('Castellar', 15))
+        self.keyloggerButton.setFont(QFont('Castellar', 15))
         self.title.setAlignment(QtCore.Qt.AlignCenter)
         self.subtitle.setAlignment(QtCore.Qt.AlignCenter)
         self.keyboardLabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -53,6 +56,7 @@ class keyboardWidget(QWidget):
         r4.addWidget(self.encodingButton)
         r4.addWidget(self.macrosButton)
         r4.addWidget(self.statsButton)
+        r4.addWidget(self.keyloggerButton)
 
         self.master.addLayout(r1, 20)
         self.master.addLayout(r2, 10)
@@ -68,6 +72,7 @@ class keyboardWidget(QWidget):
         self.macrosButton.clicked.connect(self.macroButton)
         self.encodingButton.clicked.connect(self.encodeButton)
         self.statsButton.clicked.connect(self.statButton)
+        self.keyloggerButton.clicked.connect(self.keylogButton)
 
     def macroButton(self):
         if self.macroScreen == None:
@@ -84,6 +89,9 @@ class keyboardWidget(QWidget):
             self.statScreen = compStatsWidget()
         self.statScreen.show()
         self.statScreen.timer.start(1000)
+
+    def keylogButton(self):
+        keyLog('ctrl')
 
 
 # if __name__ in "__main__":
