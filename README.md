@@ -4,7 +4,7 @@ Stellar Client is a Python Application for developers, with a bunch of tools and
 
 ## Installation
 
-Use the setup.py file and follow the instructions to initialize the project.
+Use the setup.py file and follow the instructions to initialize the project. (You need python somewhere on your machine)
 
 ```bash
 python setup.py
@@ -26,4 +26,9 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-[GPL 3.0](https://choosealicense.com/licenses/gpl-3.0/)
+[GPL 3.0](https://choosealicense.com/licenses/gpl-3.0/), see `LICENSE` file for more
+
+## Acknowledgements
+
+ - [Make a README](https://www.makeareadme.com/)
+ - Sage, for arkwork for the games
