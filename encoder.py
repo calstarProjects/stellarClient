@@ -56,8 +56,6 @@ class encodingWidget(QWidget):
         super().__init__()
         self.loadUI()
         self.settings()
-        self.gamesWindow = None
-        self.keyboardWindow = None
         self.buttonEvents()
 
     def loadUI(self):
