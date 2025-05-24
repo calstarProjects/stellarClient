@@ -21,6 +21,17 @@ class Ui_MainWindow(object):
         # define general use vars
         # sets the scale factor (default is 3)
         self.ScaleFactor = 3
+        # sent messages
+        self.SentMessages = []
+        # vars to lists
+        self.ActiveChatLogList = []
+        self.ChatLogList = []
+        
+        self.ActiveChatsListData = []
+        self.ChatsListDat = []
+        
+        self.ActiveFriendsList = []
+        self.FrinedsList = []
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(562*self.ScaleFactor, 343*self.ScaleFactor)
@@ -41,6 +52,8 @@ class Ui_MainWindow(object):
         self.SendButton = QtWidgets.QPushButton(self.centralwidget)
         self.SendButton.setGeometry(QtCore.QRect(341*self.ScaleFactor, 265*self.ScaleFactor, 31*self.ScaleFactor, 36*self.ScaleFactor))
         self.SendButton.setObjectName("SendButton")
+        # bind the button to a function
+        self.SendButton.clicked.connect(self.handleSendButton)
         self.MessageArea = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.MessageArea.setGeometry(QtCore.QRect(0*self.ScaleFactor, 265*self.ScaleFactor, 341*self.ScaleFactor, 36*self.ScaleFactor))
         self.MessageArea.setObjectName("MessageArea")
@@ -78,6 +91,92 @@ class Ui_MainWindow(object):
         self.Chats.setText(_translate("MainWindow", "Chats:"))
         self.Friends.setText(_translate("MainWindow", "Freinds:"))
 
+    # works
+    def truncateString(self, string:str, maxLineLen:int, maxLines:int):
+        """
+        takes any string and automaticaly handles line looping.
+        And if there are too many lines, then it will truncate the string.
+        
+        self: this function dosent give a shit what you make this
+        string: must be a string, this is the thing that the function touches
+        maxLineLen: the maximum amount of characters per line
+        maxLines: maximum amount of lines that the function outputs,
+        if set to 0 then it wont limit the mount of lines outputted
+        """
+        # sets the capLines var
+        if maxLines != 0:
+            capLines = True
+        else:
+            capLines = False
+        # parse string into words
+        words_list = string.split(" ")
+        final_text = ""
+        primary_text = ""
+        secondary_text = ""
+        looped_counter = 0
+        # loop through all words in the list
+        for word_index in range(len(words_list)):
+            word = words_list[word_index]
+            # we check for the edge case in which the word is longer than the max length
+            if len(word) > maxLineLen:
+                return "ERR"
+            # configured as to not add a whitespace on the first character
+            if word_index != 0:
+                primary_text = secondary_text+" "+word
+            else:
+                primary_text = secondary_text+word
+            # after we add a word we check to see if the primary text is longer than the limit
+            if len(primary_text) > maxLineLen:
+                looped_counter += 1
+                # we step back by 1 word and add that to the final text along with a newline character
+                final_text = final_text+secondary_text+"\n"
+                # then we set the primary and secondary texts to their desired values
+                primary_text = ""
+                secondary_text = word
+            else:
+                secondary_text = primary_text
+            # we check to see if we have gone over the line limit
+            if looped_counter >= maxLines and capLines == True:
+                # jank V1
+                final_text = list(final_text)
+                final_text[-1] = "."
+                final_text[-2] = "."
+                final_text[-3] = "."
+                brosMeat = ""
+                for char in final_text:
+                    brosMeat = brosMeat+char
+                # jank V2
+                return brosMeat.replace("\n\n","\n")
+        # add a newline char to
+        if final_text == "":
+            final_text = primary_text
+        else:
+            final_text = final_text+"\n"+primary_text
+        # jank V2 (again)
+        return final_text.replace("\n\n","\n")
+    
+    def addToChatLog(self, message_data):
+        # format the chat data
+        # add the formatted string
+        pass
+    def addToFriendsList(self, Friend_data):
+        pass
+    def addToChatsList(self, ChatData):
+        pass
+
+    def refreshChatLog(self):
+        pass
+    def refreshFriends(self):
+        pass
+    def refreshChatsList(self):
+        pass
+    def updateAll(self):
+        pass
+    
+    def handleSendButton(self):
+        # add message area text to sent messages
+        # clear the message area
+        pass
 
 if __name__ == "__main__":
     import sys
