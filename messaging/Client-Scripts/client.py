@@ -1,3 +1,6 @@
+"""DOES NOT WORK ATM"""
+
+
 # to-do:
 # chatrooms
 # user to user chats
@@ -50,7 +53,7 @@ class HttpClient:
 
 if __name__ == '__main__':
     # use your Cloudflare tunnel address here
-    client = HttpClient('https://stellar.mnasarchive.org', poll_interval=2.0)
+    client = HttpClient('', poll_interval=2.0)
     try:
         while True:
             text = input("Enter message (or 'quit'): ")
