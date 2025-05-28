@@ -98,11 +98,14 @@ class compStatsWidget(QWidget):
         avgTemp = 0
         try:
             temps = psutil.sensors_temperatures()
+            count = 0
             if temps:
                 for name, entries in temps.items():
                     for entry in entries:
                         avgTemp += entry.current
-                avgTemp /= len(temps)
+                        count += 1
+                if count > 0:
+                    avgTemp /= count
                 text += f'Avg temp: {avgTemp}\n'
             else:
                 text += 'Temperature information not available on this system\n'

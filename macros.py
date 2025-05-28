@@ -9,15 +9,6 @@ from PyQt5.QtGui import QFont
 from PyQt5 import QtCore
 import tkinter
 
-# root = tkinter.Tk()
-# root.withdraw()
-# root.attributes('-topmost', True)
-# root.update()
-
-# def runMacroChoice():
-#     chosenMacro = ''
-#     key = ''
-
 def circle(itr: int):
     pyautogui.move(math.cos(itr/3)*50, math.sin(itr/3)*50)
 def autoClick():
@@ -31,14 +22,6 @@ def holdKey(key: str, stop: bool = False):
     else:
         keyboard.release(key)
         
-
-#     macroChoiceItr = 0
-#     macroChoices = ['autoClick', 'circle', 'autoKey', 'holdKey']
-#     while chosenMacro == '':
-#         if tkinter.messagebox.askyesno('Macro Choice', 'Would you like to do ' + macroChoices[macroChoiceItr%4]):
-#             chosenMacro = macroChoices[macroChoiceItr%4]
-#             tkinter.messagebox.showinfo('Macro Choice', 'You have chosen ' + chosenMacro)
-#         macroChoiceItr += 1
 def getInfo(chosenMacro):
     match chosenMacro:
         case 'autoClick':

@@ -81,8 +81,8 @@ class keyboardWidget(QWidget):
     
     def encodeButton(self):
         if self.encodeScreen == None:
-            self.macroScreen = encodingWidget()
-        self.macroScreen.show()
+            self.encodeScreen = encodingWidget()
+        self.encodeScreen.show()
 
     def statButton(self):
         if self.statScreen == None:

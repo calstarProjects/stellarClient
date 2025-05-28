@@ -61,8 +61,18 @@ class gameWidget(QWidget):
     def gameOneRun(self):
         from gameOne import initGameOne
         initGameOne()
-        self.__init__()
+        self.refresh()
 
+    def refresh(self):
+        """Refresh the widget state after game completion."""
+        # clear old layout
+        old_layout = self.layout()
+        if old_layout is not None:
+            QWidget().setLayout(old_layout)  # detach & let GC clean
+
+        self.loadUi()
+        self.settings()
+        self.buttonEvents()
 
 # if __name__ in "__main__":
 #     gameApp = QApplication([])

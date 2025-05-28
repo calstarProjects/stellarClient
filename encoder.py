@@ -37,6 +37,8 @@ def encode(key: int = None, decrypted: str = None):
     return(encrypted)
 
 def decode(key: int = None, encrypted: str = None):
+    ### TODO ###
+    # make it so the dialogues are pyqt aligned
     while key == None:
         key = tkinter.simpledialog.askinteger('Decryption Key', 'Please input your decryption key')
     while encrypted == None:
