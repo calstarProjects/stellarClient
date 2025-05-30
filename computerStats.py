@@ -18,6 +18,7 @@ class compStatsWidget(QWidget):
         self.timer.start(1 * 1000)
 
     def loadUI(self):
+        self.installEventFilter(self)
         self.title = QLabel('Stellar Client')
         self.subtitle = QLabel('Your app for everything')
         self.statsLabel = QLabel('Stats')
@@ -54,15 +55,34 @@ class compStatsWidget(QWidget):
     
     def settings(self):
         self.setWindowTitle('Stellar Client Computer Stats')
-    
+
+    def eventFilter(self, obj, event):
+        """Input from the user with keypresses, called automatically"""
+
+        # keypresses
+        if obj == self and event.type() == QtCore.QEvent.KeyPress:
+            # esc
+            if event.key() in (QtCore.Qt.Key_Escape, QtCore.Qt.Key_Alt):
+                if not (event.modifiers()):
+                    # run the send message bit
+                    self.destroy(True)
+                    return True
+        return super().eventFilter(obj, event)
+
     def periodic(self):
+        startTime = time.time() * 100
         text = ''
+        text += '-------Screen Stats-------\n'
         text += f'Screen Dimentions: {pyautogui.size()}\n'
+
+        text += '-------CPU-------\n'
         try:
             text += f'CPU Usage: {psutil.cpu_percent(None)}\n'
             text += f'CPU Usage per CPU: {psutil.cpu_percent(None, True)}\n'
         except:
             text += 'CPU info not avalible, '
+
+        text += '-------RAM-------\n'
         memoryInfo = psutil.virtual_memory()
         text += f'Total RAM: {memoryInfo.total / (1024**3):.2f} GB\n'
         text += f'Used RAM: {memoryInfo.used / (1024**3):.2f} GB\n'
@@ -70,6 +90,7 @@ class compStatsWidget(QWidget):
         text += f'Available RAM: {memoryInfo.available / (1024**3):.2f} GB\n'
         text += f'Memory Usage Percentage: {memoryInfo.percent}%\n'
 
+        text += '-------NETWORK-------\n'
         net_io = psutil.net_io_counters()
         text += f'Total Bytes Sent: {net_io.bytes_sent / (1024**2):.2f} MB\n'
         text += f'Total Bytes Received: {net_io.bytes_recv / (1024**2):.2f} MB\n'
@@ -83,10 +104,11 @@ class compStatsWidget(QWidget):
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
         processes.sort(key=lambda x: x['cpu_percent'], reverse=True)
-        text += '-------Processes-------\n'
+        text += '-------PROCESSES-------\n'
         for proc in processes[:5]:
             text += f'  PID: {proc['pid']}, Name: {proc['name']}, User: {proc['username']}, CPU: {proc['cpu_percent']:.2f}%, Memory: {proc['memory_info'].rss / (1024**2):.2f} MB\n'
 
+        text += '-------UPTIME-------\n'
         boot_time_timestamp = psutil.boot_time()
         boot_time_datetime = datetime.datetime.fromtimestamp(boot_time_timestamp)
         text += f'Boot Time: {boot_time_datetime.strftime('%Y-%m-%d %H:%M:%S')}\n'
@@ -95,6 +117,7 @@ class compStatsWidget(QWidget):
         uptime = current_time - boot_time_datetime
         text += f'System Uptime: {uptime}\n'
 
+        text += '-------TEMP-------\n'
         avgTemp = 0
         try:
             temps = psutil.sensors_temperatures()
@@ -112,6 +135,9 @@ class compStatsWidget(QWidget):
         except AttributeError:
             text += 'Temperature information not available on this system (requires `psutil` 5.x+ and supported hardware/OS)\n'
 
+        text += '-------LAG-------\n'
+        text += f'Time for cycle (in ms): {(time.time() * 100)-startTime}'
+
         self.stats.setText(text)
     
     def closeEvent(self, event):
@@ -119,13 +145,12 @@ class compStatsWidget(QWidget):
         self.timer.stop() 
         print("QTimer stopped.")
 
-        # Accept the close event, allowing the window to close
         event.accept()
 
 
 
-# if __name__ in "__main__":
-#     app = QApplication([])
-#     compStats = compStatsWidget()
-#     compStats.show()
-#     app.exec_()
+if __name__ in "__main__":
+    app = QApplication([])
+    compStats = compStatsWidget()
+    compStats.show()
+    app.exec_()
