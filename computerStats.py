@@ -149,8 +149,8 @@ class compStatsWidget(QWidget):
 
 
 
-if __name__ in "__main__":
-    app = QApplication([])
-    compStats = compStatsWidget()
-    compStats.show()
-    app.exec_()
+# if __name__ in "__main__":
+#     app = QApplication([])
+#     compStats = compStatsWidget()
+#     compStats.show()
+#     app.exec_()
