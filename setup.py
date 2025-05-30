@@ -1,11 +1,10 @@
-# run_project.py
 import subprocess
 import sys
 import os
 
 venv_name = "localVenv"
 requirements_file = "libReqs.txt"
-main_script_name = "stellarClient.py"  # Replace with the actual name of your main script
+main_script_name = "stellarClient.py"  
 
 def create_and_install():
     """Creates venv and installs dependencies if not already done."""
