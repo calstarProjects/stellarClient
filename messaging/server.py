@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import threading
 import json
 
-HOST = 'stellar.mnasarchive.org'  # Replace with your server's hostname or IP
+HOST = ''  # Replace with your server's hostname or IP
 PORT = 8080
 
 class ThreadedHTTPServer(HTTPServer, threading.Thread):

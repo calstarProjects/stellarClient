@@ -1,7 +1,6 @@
 import pygame
 import math
 import time
-import keyboard
 import tkinter
 import tkinter.messagebox
 import tkinter.simpledialog
@@ -80,7 +79,7 @@ class sprite(pygame.sprite.Sprite):
     def applyForce(self, xForce: int, yForce: int):
         self.xVel += xForce
         self.yVel += yForce
-    def setPos(self, x, y):
+    def setPos(self, x: int, y: int):
         self.rect.centerx = x
         self.rect.centery = y
     # Updating pos
@@ -143,7 +142,7 @@ class sprite(pygame.sprite.Sprite):
     #     ):
     #             collided =  True
     # return collided
-    def resize(self, width, height):
+    def resize(self, width: int, height: int):
         # self.image = pygame.transform.flip(self.inverted, True, False)
         self.image = pygame.transform.scale(
             self.baseImg, 
@@ -180,7 +179,7 @@ class textSprite(pygame.sprite.Sprite):
         spriteList.add(self)
         textSpriteList.add(self)
         self.name = startText
-        self.rect.topleft = x, y
+        self.rect.center = x, y
     # Pos Updater
     def setPos(self, x, y):
         self.rect.left = x

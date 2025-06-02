@@ -45,6 +45,8 @@ def initGameOne():
     protecting = False
     protectingItr = 0
     spriteList.add(protectSprite)
+    protectSound = pygame.mixer.Sound(r'util\explosion.wav')
+    protectSound.set_volume(0.1)
 
     # Text init
     ceruLabel = textSprite("Yo, its ceru, and im here to fight ya cuz you're in my house", 0, 0)
@@ -113,16 +115,23 @@ def initGameOne():
         screenWidth,
         0
     )
+    restartLabel = textSprite(
+        'YOU DIED. Run into to restart',
+        screenWidth / 2,
+        screenHeight / 2
+    )
     shopSprites.add(healthUpgrade, speedUpgrade, protectUses, exitButton)
     shopTextSprites.add(healthLabel, speedLabel, protectLabel, exitLabel)
     for i in shopSprites:
         i.setVisible(False)
     for i in shopTextSprites:
         i.setVisible(False)
+    restartLabel.setVisible(False)
     healthUpgradeCost = 2
     speedUpgradeCost = 2
     protectUsesCost = 4
     shopMode = False
+    gameEnd = False
 
     # Loop setup
     exit = False
@@ -136,9 +145,10 @@ def initGameOne():
 
     # Loop
     while not exit:
+        # Get key list
+        keys = pygame.key.get_pressed()
+
         # Exit funcs
-        if keyboard.is_pressed('esc'):
-            exit = True
         for i in pygame.event.get():
             if i.type == pygame.QUIT:
                 exit = True
@@ -149,25 +159,29 @@ def initGameOne():
                         if j.type == pygame.MOUSEMOTION:
                             cont = True
         
+        if keys[pygame.K_ESCAPE]:
+            exit = True
+
         # Ceruledge movment
-        if keyboard.is_pressed('up'):
+        if keys[pygame.K_UP]:
             ceru.applyForce(0, -5 * ceruSpeedMult)
-        if keyboard.is_pressed('down'):
+        if keys[pygame.K_DOWN]:
             ceru.applyForce(0, 5 * ceruSpeedMult)
-        if keyboard.is_pressed('left'):
+        if keys[pygame.K_LEFT]:
             ceru.applyForce(-5 * ceruSpeedMult, 0)
-        if keyboard.is_pressed('right'):
+        if keys[pygame.K_RIGHT]:
             ceru.applyForce(5 * ceruSpeedMult, 0)
-        
+    
         # Protect
-        if (keyboard.is_pressed('space') and ceruProtectUses > 0) and not protecting:
+        if keys[pygame.K_SPACE] and not protecting:
             ceruProtectUses -= 1
             # protectSprite.setPos(ceru.rect.centerx, ceru.rect.centery)
             protectSprite.setVisible(True)
             protecting = True
+            protectSound.play(0)
             # print('protecting start: ', protecting)
-        elif keyboard.is_pressed('space') and (ceruProtectUses == 0) and not protecting:
-            ceruLabel.relabel('No Protect Uses')
+            if ceruProtectUses > 0:
+                ceruLabel.relabel('No Protect Uses')
         
         if protecting:
             # print('protecting: ', protecting, ', ', protectingItr, ', ', protectSprite.rect.width, ', ', protectSprite.rect.center, ', ', ceru.rect.center)
@@ -181,6 +195,7 @@ def initGameOne():
                 protecting = False
                 protectSprite.setPos(-400, -400)
         else: 
+            protectSprite.resize(0, 0)
             protectSprite.setVisible(False)
         #Bounding 
         if abs(ceru.xVel) > 25:
@@ -203,9 +218,9 @@ def initGameOne():
         currentTime = time.time()
         # Enemy movment
         if runEnemies:
-            if time.gmtime(currentTime).tm_sec % 10 == 1 and shadowBalls < 3:
-                if shadowBalls < 3:
-                    if (round(currentTime * 100) % 30) == 1:
+            if time.gmtime(currentTime).tm_sec % 10 == 1 and shadowBalls < 5:
+                if shadowBalls < 5:
+                    if (round(currentTime * 100) % (20 / (level + 1))) == 1:
                         obj = sprite(
                             r'util\shadowBallSprite.png', 
                             ((screenWidth / 2) - 20), 
@@ -226,7 +241,7 @@ def initGameOne():
                 ) * mod
                 i.applyForce(math.cos(angleTo) * enemySpeed, math.sin(angleTo) * enemySpeed)
                 if ceru.hitsSprite(i) and not ceruIFrames > 0:
-                    ceru.hp -= 1
+                    ceru.hp -= 1.5 ** level
                     ceruIFrames = 100
                     ceruLabel.relabel('HP: ' + str(ceru.hp) + '/' + str(ceru.maxHp))
                     i.kill()
@@ -241,7 +256,7 @@ def initGameOne():
             prevSec = currentTime
         
         # Shop start
-        if (time.gmtime(time.time()).tm_sec) == (startSec + 30) % 60 and not shopMode:
+        if (time.gmtime(time.time()).tm_sec) == (startSec + 40) % 60 and not shopMode:
             runEnemies = False
             for i in shopSprites:
                 i.setVisible(True)
@@ -314,10 +329,42 @@ def initGameOne():
                         startSec = time.gmtime(time.time()).tm_sec
                         level += 1
                         enemySpeed = 1 + (0.5 * level)
+        if ceru.hp <= 0:
+            ceru.hp = 0.1
+            ceru.setPos(screenWidth / 2, (screenHeight / 4) * 3)
+            runEnemies = False
+            for i in enemies:
+                i.kill()
+            restartLabel.setVisible(True)
+            gameEnd = True
+        
+        if gameEnd:
+            if ceru.hitsSprite(restartLabel):
+                enemySpeed = 1
+                ceru.maxHp = 15
+                ceru.hp = ceru.maxHp
+                ceruSpeedMult = 1
+                ceruIFrames = 0
+                ceruProtectUses = 0
+                ceruProtectUsesMax = 0
+                ceruCoins = 0
+                healthUpgradeCost = 2
+                speedUpgradeCost = 2
+                protectUsesCost = 4
+                shopMode = False
+                gameEnd = False
+                shadowBalls = 0
+                cont = True
+                prevSec = time.time()
+                startSec = time.gmtime(time.time()).tm_sec
+                runEnemies = True
+                level = 0
+                restartLabel.setVisible(False)
+        
         coinsLabel.relabel('Coins: ' + str(ceruCoins))
         coinsLabel.rect.topright = (screenWidth, 0)
         ceruIFrames -= 1
         enemySpeed += 0.001
     pygame.quit()
 
-# runGameOne()
+initGameOne()
