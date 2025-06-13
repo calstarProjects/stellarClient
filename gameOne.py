@@ -45,8 +45,13 @@ def initGameOne():
     protecting = False
     protectingItr = 0
     spriteList.add(protectSprite)
-    protectSound = pygame.mixer.Sound(r'util\explosion.wav')
-    protectSound.set_volume(0.1)
+    try:
+        protectSound = pygame.mixer.Sound(r'util\explosion.wav')
+        protectSound.set_volume(0.1)
+    except pygame.mixer.error:
+        pygame.mixer.init()
+        protectSound = pygame.mixer.Sound(r'util\explosion.wav')
+        protectSound.set_volume(0.1)
 
     # Text init
     ceruLabel = textSprite("Yo, its ceru, and im here to fight ya cuz you're in my house", 0, 0)
@@ -364,7 +369,9 @@ def initGameOne():
         coinsLabel.relabel('Coins: ' + str(ceruCoins))
         coinsLabel.rect.topright = (screenWidth, 0)
         ceruIFrames -= 1
-        enemySpeed += 0.001
+        if not gameEnd:
+            enemySpeed += 0.001
     pygame.quit()
 
-initGameOne()
+if __name__ == "__main__":
+    initGameOne()

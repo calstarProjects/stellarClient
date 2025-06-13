@@ -45,7 +45,7 @@ def keyLog(endKey: str):
             pass
         else:
             keyStr += i
-        log(keys, keyStr)
+    log(keys, keyStr)
     return(str(keys) + ', ' + keyStr)
 def keyLogPrint(endKey: str):
     tkinter.messagebox.showinfo('Keylog Print', f'Keylogging with endkey {endKey}! Output will be in terminal')

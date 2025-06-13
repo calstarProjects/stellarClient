@@ -11,6 +11,7 @@ from PyQt5 import QtCore
 class compStatsWidget(QWidget):
     def __init__(self):
         super().__init__()
+        self.size = pyautogui.size()
         self.loadUI()
         self.settings()
         self.timer = QtCore.QTimer()
@@ -70,10 +71,10 @@ class compStatsWidget(QWidget):
         return super().eventFilter(obj, event)
 
     def periodic(self):
-        startTime = time.time() * 100
+        startTime = time.time() * 1000
         text = ''
         text += '-------Screen Stats-------\n'
-        text += f'Screen Dimentions: {pyautogui.size()}\n'
+        text += f'Screen Dimentions: {self.size}\n'
 
         text += '-------CPU-------\n'
         try:
@@ -106,7 +107,7 @@ class compStatsWidget(QWidget):
         processes.sort(key=lambda x: x['cpu_percent'], reverse=True)
         text += '-------PROCESSES-------\n'
         for proc in processes[:5]:
-            text += f'  PID: {proc['pid']}, Name: {proc['name']}, User: {proc['username']}, CPU: {proc['cpu_percent']:.2f}%, Memory: {proc['memory_info'].rss / (1024**2):.2f} MB\n'
+            text += f"  PID: {proc['pid']}, Name: {proc['name']}, User: {proc['username']}, CPU: {proc['cpu_percent']:.2f}%, Memory: {proc['memory_info'].rss / (1024**2):.2f} MB\n"
 
         text += '-------UPTIME-------\n'
         boot_time_timestamp = psutil.boot_time()
@@ -136,7 +137,7 @@ class compStatsWidget(QWidget):
             text += 'Temperature information not available on this system (requires `psutil` 5.x+ and supported hardware/OS)\n'
 
         text += '-------LAG-------\n'
-        text += f'Time for cycle (in ms): {(time.time() * 100)-startTime}'
+        text += f'Time for cycle (in ms): {(time.time() * 1000)-startTime}'
 
         self.stats.setText(text)
     

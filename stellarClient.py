@@ -77,12 +77,12 @@ class stellarClientWidget(QWidget):
         self.keyboardUtilButton.clicked.connect(self.keyboardButton)
     
     def gameButton(self):
-        if self.gamesWindow == None:
+        if self.gamesWindow == None or self.gamesWindow.isHidden():
             self.gamesWindow = gameWidget()
         self.gamesWindow.show()
 
     def keyboardButton(self):
-        if self.keyboardWindow == None:
+        if self.keyboardWindow == None or self.keyboardWindow.isHidden():
             self.keyboardWindow = keyboardWidget()
         self.keyboardWindow.show()
 

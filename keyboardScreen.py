@@ -91,7 +91,7 @@ class keyboardWidget(QWidget):
         self.statScreen.timer.start(1000)
 
     def keylogButton(self):
-        keyLog('ctrl')
+        threading.Thread(target=keyLog, args=('ctrl',), daemon=True).start()
 
 
 # if __name__ in "__main__":

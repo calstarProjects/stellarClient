@@ -29,7 +29,8 @@ def encode(key: int = None, decrypted: str = None):
     encrypted = ''
 
     for i in range(len(decrypted)):
-        encrypted += chr(ord(decrypted[i]) - int(str(key)[i % len(str(key))]))
+        shift = int(str(key)[i % len(str(key))])
+        encrypted += chr((ord(decrypted[i]) - shift) % 0x110000)
 
     tkinter.messagebox.showinfo('Encrypted', encrypted + ' will be copied to you clipboard')
     print(encrypted)
@@ -46,7 +47,8 @@ def decode(key: int = None, encrypted: str = None):
     decrypted = ''
 
     for i in range(len(encrypted)):
-        decrypted += chr(ord(encrypted[i]) + int(str(key)[i % len(str(key))]))
+        shift = int(str(key)[i % len(str(key))])
+        decrypted += chr((ord(encrypted[i]) + shift) % 0x110000)
 
     tkinter.messagebox.showinfo('Decrypted', decrypted + ' will be copied to you clipboard')
     print(decrypted)
