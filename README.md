@@ -28,6 +28,9 @@ Please make sure to update tests as appropriate.
 
 [GPL 3.0](https://choosealicense.com/licenses/gpl-3.0/), see `LICENSE` file for more
 
+## Notes
+All information should be refrenced from the MAIN BRANCH `README.md`
+
 ## Acknowledgements
 
  - [Make a README](https://www.makeareadme.com/)
