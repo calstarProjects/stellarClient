@@ -1,76 +1,153 @@
-import keyboard
+# import keyboard
 import pyautogui
 import time
 import psutil
 import datetime
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5 import QtCore
+import tkinter as tk
 
 
-class compStatsWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+class computerStatsApp:
+    def __init__(self, parent = None, title='Computer Stats', geometry="800x600"):
+        self.parent = parent
+        self.window = None
+        self.title = title
+        self.geometery = geometry
         self.size = pyautogui.size()
-        self.loadUI()
-        self.settings()
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.periodic)
-        self.timer.start(1 * 1000)
+        self.timerJob = None
+        self.isRunning = None
 
-    def loadUI(self):
-        self.installEventFilter(self)
-        self.title = QLabel('Stellar Client')
-        self.subtitle = QLabel('Your app for everything')
-        self.statsLabel = QLabel('Stats')
-        self.warning = QLabel("WARNING: This program WILL lag your computer, you may need to end it's task/use alt+4")
-        self.stats = QLabel('')
-        self.title.setFont(QFont('Castellar', 45))
-        self.subtitle.setFont(QFont('Castellar', 25))
-        self.title.setAlignment(QtCore.Qt.AlignCenter)
-        self.subtitle.setAlignment(QtCore.Qt.AlignCenter)
-        self.statsLabel.setFont(QFont('Castellar', 20, 100))
-        self.statsLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.warning.setStyleSheet('color: red;')
-        self.warning.setFont(QFont('Bahnschrift', 15, 200))
-        self.warning.setAlignment(QtCore.Qt.AlignCenter)
+    def show(self):
+        if self.window is not None and self.window.winfo_exists():
+            self.window.lift()
+            return
+        
+        self.createWindow()
+        self.startMonitor()
 
-        self.master = QBoxLayout(2)
-        r1 = QBoxLayout(1)
-        r2 = QBoxLayout(1)
-        r3 = QBoxLayout(1)
-        r4 = QBoxLayout(2)
+    def createWindow(self):
+        if self.parent:
+            self.window = tk.Toplevel(self.parent)
+        else:
+            self.window = tk.Tk()
+        
+        self.window.title(self.title)
+        self.window.geometry(self.geometery)
+        self.window.protocol('WM_DELETE_WINDOW', self.onClose)
 
-        r1.addWidget(self.title)
-        r2.addWidget(self.subtitle)
-        r3.addWidget(self.statsLabel)
-        r4.addWidget(self.warning)
-        r4.addWidget(self.stats)
+        self.window.bind('<Escape>', lambda e: self.onClose)
+        self.window.bind('<Alt-Key-4>', lambda e: self.onClose)
+        
+        self.createWidgets()
 
-        self.master.addLayout(r1, 20)
-        self.master.addLayout(r2, 10)
-        self.master.addLayout(r3, 20)
-        self.master.addLayout(r4, 50)
+    def createWidgets(self):
+        mainFrame = tk.Frame(self.window, bg='white')
+        mainFrame.pack(fill='both', expand=True, padx=10, pady=10)
 
-        self.setLayout(self.master)
+        titleFrame = tk.Frame(mainFrame, bg='white')
+        titleFrame.pack(fill='x', pady=(0, 10))
+
+        self.titleLabel = tk.Label(
+            titleFrame,
+            text='Stellar Client',
+            font=(
+                'Castellar', 
+                23, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.titleLabel.pack()
+
+
+        subtitleFrame = tk.Frame(mainFrame, bg='white')
+        subtitleFrame.pack(fill='x', pady=(0, 10))
+
+        self.subtitleLabel = tk.Label(
+            subtitleFrame,
+            text='Your app for everything',
+            font=(
+                'Castellar', 
+                18, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.subtitleLabel.pack()
+
+        statsHeaderFrame = tk.Frame(mainFrame, bg='white')
+        statsHeaderFrame.pack(fill='x', pady=(0, 10))
+
+        self.statsHeader = tk.Label(
+            statsHeaderFrame,
+            text='Computer Stats',
+            font=(
+                'Castellar',
+                16,
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.statsHeader.pack()
+
+
+        contentFrame = tk.Frame(mainFrame, bg='white')
+        contentFrame.pack(fill='x', pady=(0, 10))
+
+        self.warningLabel = tk.Label(
+            contentFrame,
+            text="WARNING: This program WILL lag your computer, you may need to end it's task/use alt+4",
+            font=(
+                'Castellar',
+                12,
+                'bold'
+            ),
+            bg='white',
+            fg='red',
+            wraplength=700
+        )
+        self.warningLabel.pack()
+
+        statsFrame = tk.Frame(contentFrame)
+        statsFrame.pack(fill='both', expand=True)
+
+        scrollbar = tk.Scrollbar(statsFrame)
+        scrollbar.pack(side='right', fill='y')
+
+        self.statsText = tk.Text(
+            statsFrame,
+            font=(
+                'Cascadia Code',
+                10,
+            ),
+            fg='gray',
+            bg='white',
+            yscrollcommand=scrollbar.set
+        )
+        self.statsText.pack(side='left', fill='both', expand=True)
+        scrollbar.config(command=self.statsText.yview)
+
+        instructions = tk.Label(
+            contentFrame,
+            font=(
+                'Cascadia Code',
+                10,
+            ),
+            bg='gray',
+            fg='black'
+        )
+        instructions.pack(pady=(10, 0))
     
-    def settings(self):
-        self.setWindowTitle('Stellar Client Computer Stats')
-
-    def eventFilter(self, obj, event):
-        """Input from the user with keypresses, called automatically"""
-
-        # keypresses
-        if obj == self and event.type() == QtCore.QEvent.KeyPress:
-            # esc
-            if event.key() in (QtCore.Qt.Key_Escape, QtCore.Qt.Key_Alt):
-                if not (event.modifiers()):
-                    # run the send message bit
-                    self.destroy(True)
-                    return True
-        return super().eventFilter(obj, event)
-
-    def periodic(self):
+    def startMonitor(self):
+        self.isRunning = True
+        self.updateStats()
+    
+    def updateStats(self):
+        if not self.isRunning or not self.window or not self.window.winfo_exists():
+            return
+        
         startTime = time.time() * 1000
         text = ''
         text += '-------Screen Stats-------\n'
@@ -139,19 +216,28 @@ class compStatsWidget(QWidget):
         text += '-------LAG-------\n'
         text += f'Time for cycle (in ms): {(time.time() * 1000)-startTime}'
 
-        self.stats.setText(text)
+        self.statsText.config(state='normal')
+        self.statsText.delete('1.0', tk.END)
+        self.statsText.insert('1.0', text)
+        self.statsText.config(state='disabled')
+
+        if self.isRunning and self.window and self.window.winfo_exists():
+            self.timerJob = self.window.after(1000, self.updateStats)
+
+    def onClose(self):
+        self.stopMonitor()
+        if self.window:
+            self.window.destroy()
+            self.window = None
     
-    def closeEvent(self, event):
-        print("Window is closing. Terminating managed processes...")
-        self.timer.stop() 
-        print("QTimer stopped.")
+    def stopMonitor(self):
+        self.isRunning = False
+        if self.timerJob and self.window:
+            self.window.after_cancel(self.timerJob)
+            self.timerJob = None
 
-        event.accept()
-
-
-
-# if __name__ in "__main__":
-#     app = QApplication([])
-#     compStats = compStatsWidget()
-#     compStats.show()
-#     app.exec_()
+        
+if __name__ == '__main__':
+    app = computerStatsApp(geometry=('400x300'))
+    app.show()
+    app.window.mainloop()
