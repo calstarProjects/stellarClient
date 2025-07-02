@@ -6,8 +6,8 @@ import datetime
 import tkinter as tk
 
 
-class computerStatsApp:
-    def __init__(self, parent = None, title='Computer Stats', geometry="800x600"):
+class computerStatsWindow:
+    def __init__(self, parent = None, title='Stellar Client Computer Stats', geometry="800x600"):
         self.parent = parent
         self.window = None
         self.title = title
@@ -33,6 +33,10 @@ class computerStatsApp:
         self.window.title(self.title)
         self.window.geometry(self.geometery)
         self.window.protocol('WM_DELETE_WINDOW', self.onClose)
+        self.window.deiconify()
+        self.window.iconbitmap(r'util\stellarClientLogo.ico')
+        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
+        self.window.iconphoto(True, icon)
 
         self.window.bind('<Escape>', lambda e: self.onClose)
         self.window.bind('<Alt-Key-4>', lambda e: self.onClose)
@@ -238,6 +242,6 @@ class computerStatsApp:
 
         
 if __name__ == '__main__':
-    app = computerStatsApp(geometry=('400x300'))
+    app = computerStatsWindow(geometry=('400x300'))
     app.show()
     app.window.mainloop()

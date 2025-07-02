@@ -56,7 +56,7 @@ def decode(key: int = None, encrypted: str = None):
     return decrypted
 
 class encodingWindow:
-    def __init__(self, parent = None, title = 'Encoding/Decoding', geometry = "800x600"):
+    def __init__(self, parent = None, title = 'Stellar Client Encoding/Decoding', geometry = "800x600"):
         self.parent = parent
         self.window = None
         self.title = title
@@ -78,6 +78,10 @@ class encodingWindow:
         self.window.title(self.title)
         self.window.geometry(self.geometry)
         self.window.protocol('WM_DELETE_WINDOW', self.onClose)
+        self.window.deiconify()
+        self.window.iconbitmap(r'util\stellarClientLogo.ico')
+        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
+        self.window.iconphoto(True, icon)
 
         self.createWidgets()
 
@@ -118,11 +122,11 @@ class encodingWindow:
         )
         self.subtitleLabel.pack()
 
-        statsHeaderFrame = tk.Frame(mainFrame, bg='white')
-        statsHeaderFrame.pack(fill='x', pady=(0, 10))
+        encoderHeaderFrame = tk.Frame(mainFrame, bg='white')
+        encoderHeaderFrame.pack(fill='x', pady=(0, 10))
 
-        statsHeader = tk.Label(
-            statsHeaderFrame,
+        encoderHeader = tk.Label(
+            encoderHeaderFrame,
             text='Encoder/Decoder',
             font=(
                 'Castellar',
@@ -132,7 +136,7 @@ class encodingWindow:
             bg='white',
             fg='black'
         )
-        statsHeader.pack()
+        encoderHeader.pack()
 
         contentFrame = tk.Frame(mainFrame, bg='white')
         contentFrame.pack(fill='x', pady=(0, 10))

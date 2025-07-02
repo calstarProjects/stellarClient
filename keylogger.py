@@ -72,3 +72,6 @@ def keyLogPrint(endKey: str):
             keyStr += i
         print(f'{keys},  + {keyStr}')
     return(str(keys) + ', ' + keyStr)
+
+if __name__ == '__main__':
+    keyLog('ctrl')

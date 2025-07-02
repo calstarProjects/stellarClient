@@ -1,101 +1,161 @@
-import pyautogui
-import threading
-# from keylogger import keyLog, keyLogPrint
-# from macros import runMacroChoice
-# from encoder import encode, decode
-# from gameOne import initGameOne
-from macros import macroWidget
-from encoder import encodingWidget
-from computerStats import compStatsWidget
+from gameScreen import gameScreen
+from macros import macroWindow
+from encoder import encodingWindow
+from computerStats import computerStatsWindow
 from keylogger import keyLog
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5 import QtCore
+import tkinter as tk
 
+class keyboardWindow:
+    def __init__(self, parent = None, title = 'Stellar Client Keyboard Util', geometry = '800x600'):
+        # TODO: macro button, encode button, stat button, macroButton
+        self.parent = parent
+        self.window = None
+        self.title = title
+        self.geometry = geometry
 
-screenwidth, screenlength = pyautogui.size()
-
-class keyboardWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.macroScreen = None
-        self.encodeScreen = None
-        self.statScreen = None
-        self.loadUi()
-        self.settings()
-        self.buttonEvents()
-
-    def loadUi(self):
-        self.title = QLabel('Stellar Client')
-        self.subtitle = QLabel('Your app for everything\n')
-        self.keyboardLabel = QLabel('Keyboard Util')
-        self.macrosButton = QPushButton('Macros')
-        self.encodingButton = QPushButton('Encoding/Decoding')
-        self.statsButton = QPushButton('Computer Stats')
-        self.keyloggerButton = QPushButton('Run Keylogger')
-        self.title.setFont(QFont('Castellar', 25))
-        self.subtitle.setFont(QFont('Castellar', 15))
-        self.keyboardLabel.setFont(QFont('Castellar', 20, 100))
-        self.macrosButton.setFont(QFont('Castellar', 15))
-        self.encodingButton.setFont(QFont('Castellar', 15))
-        self.statsButton.setFont(QFont('Castellar', 15))
-        self.keyloggerButton.setFont(QFont('Castellar', 15))
-        self.title.setAlignment(QtCore.Qt.AlignCenter)
-        self.subtitle.setAlignment(QtCore.Qt.AlignCenter)
-        self.keyboardLabel.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.master = QBoxLayout(2)
-        r1 = QBoxLayout(1)
-        r2 = QBoxLayout(1)
-        r3 = QBoxLayout(1)
-        r4 = QBoxLayout(1)
-
-        r1.addWidget(self.title)
-        r2.addWidget(self.subtitle)
-        r3.addWidget(self.keyboardLabel)
-        r4.addWidget(self.encodingButton)
-        r4.addWidget(self.macrosButton)
-        r4.addWidget(self.statsButton)
-        r4.addWidget(self.keyloggerButton)
-
-        self.master.addLayout(r1, 20)
-        self.master.addLayout(r2, 10)
-        self.master.addLayout(r3, 20)
-        self.master.addLayout(r4, 50)
-
-        self.setLayout(self.master)
+        self.macroWindow = None
+        self.encodeWindow = None
+        self.keylogWindow = None
+    def show(self):
+        if self.window is not None and self.window.winfo_exists():
+            self.window.lift()
+            return
+        
+        self.createWindow()
     
-    def settings(self):
-        self.setWindowTitle('Stellar Client Keyboard Util')
+    def createWindow(self):
+        if self.parent:
+            self.window = tk.Toplevel(self.parent)
+        else:
+            self.window = tk.Tk()
+        
+        self.window.title(self.title)
+        self.window.geometry(self.geometry)
+        self.window.protocol('WM_DELETE_WINDOW', self.onClose)
+        self.window.deiconify()
+        self.window.iconbitmap(r'util\stellarClientLogo.ico')
+        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
+        self.window.iconphoto(True, icon)
+
+        self.createWidgets()
+
+    def createWidgets(self):
+        mainFrame = tk.Frame(self.window, bg='white')
+        mainFrame.pack(fill='both', expand=True, padx=10, pady=10)
+
+        titleFrame = tk.Frame(mainFrame, bg='white')
+        titleFrame.pack(fill='x', pady=(0, 10))
+
+        self.titleLabel = tk.Label(
+            titleFrame,
+            text='Stellar Client',
+            font=(
+                'Castellar', 
+                23, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.titleLabel.pack()
+
+
+        subtitleFrame = tk.Frame(mainFrame, bg='white')
+        subtitleFrame.pack(fill='x', pady=(0, 10))
+
+        self.subtitleLabel = tk.Label(
+            subtitleFrame,
+            text='Your app for everything',
+            font=(
+                'Castellar', 
+                18, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.subtitleLabel.pack()
+
+        keyboardUtilHeaderFrame = tk.Frame(mainFrame, bg='white')
+        keyboardUtilHeaderFrame.pack(fill='x', pady=(0, 10))
+
+        keyboardUtilHeader = tk.Label(
+            keyboardUtilHeaderFrame,
+            text='Keyboard Util',
+            font=(
+                'Castellar',
+                16,
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        keyboardUtilHeader.pack(expand=True)
+
+        contentFrame = tk.Frame(mainFrame)
+        contentFrame.pack(pady=(0, 10))
+
+        macroButton = tk.Button(
+            contentFrame,
+            text='Macros',
+            font=(
+                'Arial',
+                12
+            ),
+            bg='gray',
+            fg='black',
+            command=self.macro
+        )
+        macroButton.pack(side='left', fill='both', padx=10, expand=False)
+
+        encodeButton = tk.Button(
+            contentFrame,
+            text='Encoding',
+            font=(
+                'Arial',
+                12
+            ),
+            bg='gray',
+            fg='black',
+            command=self.encoder
+        )
+        encodeButton.pack(side='left', fill='both', padx=10, expand=False)
     
-    def buttonEvents(self):
-        self.macrosButton.clicked.connect(self.macroButton)
-        self.encodingButton.clicked.connect(self.encodeButton)
-        self.statsButton.clicked.connect(self.statButton)
-        self.keyloggerButton.clicked.connect(self.keylogButton)
-
-    def macroButton(self):
-        if self.macroScreen == None:
-            self.macroScreen = macroWidget()
-        self.macroScreen.show()
+        keyLogButton = tk.Button(
+            contentFrame,
+            text='Keylogger',
+            font=(
+                'Arial',
+                12
+            ),
+            bg='gray',
+            fg='black',
+            command=self.keylog
+        )
+        keyLogButton.pack(side='left', fill='both', padx=10, expand=False)
     
-    def encodeButton(self):
-        if self.encodeScreen == None:
-            self.encodeScreen = encodingWidget()
-        self.encodeScreen.show()
+    def macro(self):
+        if self.macroWindow != None:
+            self.macroWindow = macroWindow()
+        self.macroWindow.show()
+    
+    def encoder(self):
+        if self.encodeWindow != None:
+            self.encodeWindow = encodingWindow()
+        self.encodeWindow.show()
+    
+    def keylog(self):
+        keyLog('ctrl')
+    
+    def onClose(self):
+        if self.window:
+            self.window.destroy()
+            self.window = None
 
-    def statButton(self):
-        if self.statScreen == None:
-            self.statScreen = compStatsWidget()
-        self.statScreen.show()
-        self.statScreen.timer.start(1000)
-
-    def keylogButton(self):
-        threading.Thread(target=keyLog, args=('ctrl',), daemon=True).start()
 
 
-# if __name__ in "__main__":
-#     gameApp = QApplication([])
-#     game = gameWidget()
-#     game.show()
-#     gameApp.exec_()
+
+if __name__ == "__main__":
+    app = keyboardWindow()
+    app.show()
+    app.window.mainloop()
