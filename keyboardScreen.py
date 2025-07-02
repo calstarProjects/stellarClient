@@ -135,12 +135,12 @@ class keyboardWindow:
         keyLogButton.pack(side='left', fill='both', padx=10, expand=False)
     
     def macro(self):
-        if self.macroWindow != None:
+        if self.macroWindow == None:
             self.macroWindow = macroWindow()
         self.macroWindow.show()
     
     def encoder(self):
-        if self.encodeWindow != None:
+        if self.encodeWindow == None:
             self.encodeWindow = encodingWindow()
         self.encodeWindow.show()
     

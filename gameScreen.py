@@ -93,7 +93,7 @@ class gameScreen:
 
         gameOneButton = tk.Button(
             gamesFrame,
-            text='Bullet Hell Rougelike',
+            text='Bullet Hell Roguelike',
             font=(
                 'Castellar',
                 16
@@ -108,7 +108,7 @@ class gameScreen:
 
         gameTwoButton = tk.Button(
             gamesFrame,
-            text='Bullet Hell Rougelike',
+            text='Game Two',  # TODO: Update with actual game name
             font=(
                 'Castellar',
                 16
@@ -118,8 +118,7 @@ class gameScreen:
             width=15, # int(self.geometry[0:3])//3
             height=2
         )
-        gameTwoButton.pack(side='left', fill='both', padx=(5, 0), expand=False)
-    
+        gameTwoButton.pack(side='left', fill='both', padx=(5, 0), expand=False)    
     def gameOne(self):
         from gameOne import initGameOne
         initGameOne()

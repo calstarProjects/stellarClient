@@ -19,7 +19,7 @@ In Progress:
 import sys
 import pyautogui
 from keylogger import keyLog, keyLogPrint
-from keyboardScreen import keyboardWidget
+from keyboardScreen import keyboardWindow
 from encoder import encode, decode
 from gameScreen import *
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
@@ -78,12 +78,12 @@ class stellarClientWidget(QWidget):
     
     def gameButton(self):
         if self.gamesWindow == None or self.gamesWindow.isHidden():
-            self.gamesWindow = gameWidget()
+            self.gamesWindow = gameScreen()
         self.gamesWindow.show()
 
     def keyboardButton(self):
         if self.keyboardWindow == None or self.keyboardWindow.isHidden():
-            self.keyboardWindow = keyboardWidget()
+            self.keyboardWindow = keyboardWindow()
         self.keyboardWindow.show()
 
 

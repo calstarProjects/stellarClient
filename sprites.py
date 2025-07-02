@@ -10,8 +10,7 @@ import pyautogui
 root = tkinter.Tk()
 root.withdraw()
 root.attributes('-topmost', True)
-root.update
-
+root.update()
 screen = None
 screenWidth = 800
 screenHeight = 600
@@ -20,7 +19,7 @@ def initScreen():
     global screen, screenWidth, screenHeight
     try:
         pygame.quit()
-    except:
+    except pygame.error:
         pass
     pygame.init()
 

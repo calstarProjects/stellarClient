@@ -11,7 +11,7 @@ class computerStatsWindow:
         self.parent = parent
         self.window = None
         self.title = title
-        self.geometery = geometry
+        self.geometry = geometry
         self.size = pyautogui.size()
         self.timerJob = None
         self.isRunning = None
@@ -31,7 +31,7 @@ class computerStatsWindow:
             self.window = tk.Tk()
         
         self.window.title(self.title)
-        self.window.geometry(self.geometery)
+        self.window.geometry(self.geometry)
         self.window.protocol('WM_DELETE_WINDOW', self.onClose)
         self.window.deiconify()
         self.window.iconbitmap(r'util\stellarClientLogo.ico')
@@ -242,6 +242,6 @@ class computerStatsWindow:
 
         
 if __name__ == '__main__':
-    app = computerStatsWindow(geometry=('400x300'))
+    app = computerStatsWindow(geometry='400x300')
     app.show()
     app.window.mainloop()

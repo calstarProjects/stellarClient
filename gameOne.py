@@ -8,9 +8,10 @@ Credit to my friend Sage for the sprite
 
 def initGameOne():
     import pygame
-    from sprites import sprite, textSprite, spriteList, textSpriteList, screenWidth, screenHeight, time, math, screen, initScreen, getScreen
+    from sprites import sprite, textSprite, spriteList, textSpriteList, screenWidth, screenHeight, time, math, initScreen, getScreen, screen
 
-    screen = initScreen()
+    if screen == None:
+        screen = initScreen()
 
     spriteList.empty()
     textSpriteList.empty()
@@ -23,7 +24,7 @@ def initGameOne():
 
     # player sprite init
     ps = sprite(
-        r'util\playerSprite.png', 
+        'util/playerSprite.png',
         50, 
         0, 
         200, 
@@ -187,13 +188,14 @@ def initGameOne():
     
         # Protect
         if keys[pygame.K_SPACE] and not protecting:
-            psProtectUses -= 1
-            protectSprite.setVisible(True)
-            protecting = True
-            protectSound.play(0)
             # print('protecting start: ', protecting)
             if psProtectUses > 0:
                 psLabel.relabel('No Protect Uses')
+                psProtectUses -= 1
+                protectSprite.setVisible(True)
+                protecting = True
+                protectSound.play(0)
+
         
         if protecting:
             if protectingItr < 75:

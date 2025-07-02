@@ -204,7 +204,6 @@ class encodingWindow:
             command=self.encodeInputs
         )
         encodeButton.pack(padx=100, pady=(0, 10))
-        encodeButton.bind()
 
         decodeButton = tk.Button(
             buttonFrame,
@@ -235,23 +234,31 @@ class encodingWindow:
     def encodeInputs(self):
         text = self.textInput.get('1.0', tk.END).strip()
         key = self.keyInput.get('1.0', tk.END).strip()
+        try:
+            key = int(key) if key else None
+        except ValueError:
+            tkmb.showerror("Invalid Key", "Key must be a valid integer")
+            return
         self.textInput.delete('1.0', tk.END)
         self.keyInput.delete('1.0', tk.END)
         self.output.config(state='normal')
         self.output.delete('1.0', tk.END)
         self.output.insert('1.0', encode(key, text))
         self.output.config(state='disabled')
-
     def decodeInputs(self):
         text = self.textInput.get('1.0', tk.END).strip()
         key = self.keyInput.get('1.0', tk.END).strip()
+        try:
+            key = int(key) if key else None
+        except ValueError:
+            tkmb.showerror("Invalid Key", "Key must be a valid integer")
+            return
         self.textInput.delete('1.0', tk.END)
         self.keyInput.delete('1.0', tk.END)
         self.output.config(state='normal')
         self.output.delete('1.0', tk.END)
         self.output.insert('1.0', decode(key, text))
-        self.output.config(state='disabled')
-    
+        self.output.config(state='disabled')    
     def onClose(self):
         if self.window:
             self.window.destroy()

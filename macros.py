@@ -38,6 +38,8 @@ def getInfo(chosenMacro):
             key = keyboard.read_key()
             pyautogui.press('backspace')
             tkmb.askokcancel('Key Choice', 'You have chosen ' + key + ' as your key')
+    if key:
+        return key
 
 def runMacro(chosenMacro: str, key: str = None):
     desiredMins = None
@@ -53,7 +55,7 @@ def runMacro(chosenMacro: str, key: str = None):
     iteration = 0
     while not keyboard.is_pressed('esc'):
         if keyboard.is_pressed('ctrl'):
-            tkmb.showwarning('WARNING', 'WARNING PAUSING FOR TOO LONG CAN GO PAST YOUR TIME GOAL AND RUN FOREVER \nHOLD SHIFT AND THEN CTRL TO FORCE QUIT \npress x to continue')
+            tkmb.showwarning('WARNING', 'WARNING PAUSING FOR TOO LONG CAN GO PAST YOUR TIME GOAL AND RUN FOREVER \nHOLD ESC TO FORCE QUIT \npress x to continue')
             keyboard.wait('x')
             pyautogui.press('backspace')
         if chosenMacro == 'holdKey':
@@ -218,17 +220,13 @@ class macroWindow:
         self.autoKeyButton.pack(padx=10, side='left', fill='both', expand=False)
         
     def runAutoClick(self):
-        getInfo('autoClick')
-        runMacro('autoClick')
+        runMacro('autoClick', getInfo('autoClick'))
     def runCircle(self):
-        getInfo('circle')
-        runMacro('circle')
+        runMacro('circle', getInfo('circle'))
     def runAutoKey(self):
-        getInfo('autoKey')
-        runMacro('autoKey')
+        runMacro('autoKey', getInfo('autoKey'))
     def runHoldKey(self):
-        getInfo('holdKey')
-        runMacro('holdKey')
+        runMacro('holdKey', getInfo('holdKey'))
 
     def onClose(self):
         if self.window:
