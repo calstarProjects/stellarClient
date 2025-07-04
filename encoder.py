@@ -16,10 +16,6 @@ import tkinter as tk
 import tkinter.messagebox as tkmb
 import tkinter.simpledialog as tksd
 import pyperclip
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5 import QtCore
-
 
 def encode(key: int = None, decrypted: str = None):    
     while key == None:
@@ -38,8 +34,6 @@ def encode(key: int = None, decrypted: str = None):
     return(encrypted)
 
 def decode(key: int = None, encrypted: str = None):
-    ### TODO ###
-    # make it so the dialogues are pyqt aligned
     while key == None:
         key = tksd.askinteger('Decryption Key', 'Please input your decryption key')
     while encrypted == None:

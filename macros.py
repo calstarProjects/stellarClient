@@ -4,9 +4,6 @@ import keyboard
 import pyautogui
 import math
 import time
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5 import QtCore
 import tkinter as tk
 
 def circle(itr: int):

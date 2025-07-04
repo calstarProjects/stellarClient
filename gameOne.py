@@ -12,6 +12,8 @@ def initGameOne():
 
     if screen == None:
         screen = initScreen()
+    else:
+        screen = getScreen()
 
     spriteList.empty()
     textSpriteList.empty()

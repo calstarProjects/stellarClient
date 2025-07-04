@@ -18,77 +18,148 @@ In Progress:
 
 import sys
 import pyautogui
-from keylogger import keyLog, keyLogPrint
 from keyboardScreen import keyboardWindow
-from encoder import encode, decode
-from gameScreen import *
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5 import QtCore
+from encoder import encodingWindow
+from gameScreen import gameScreen
+import tkinter as tk
 
 screenwidth, screenlength = pyautogui.size()
 
-class stellarClientWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.loadUI()
-        self.settings()
-        self.gamesWindow = None
+class stellarClientWindow:
+    def __init__(self, parent = None, title = 'Stellar Client Homepage', geometry = '800x600'):
+        # TODO: macro button, encode button, stat button, macroButton
+        self.parent = parent
+        self.window = None
+        self.title = title
+        self.geometry = geometry
+
         self.keyboardWindow = None
-        self.buttonEvents()
-
-    def loadUI(self):
-        self.title = QLabel('Stellar Client')
-        self.subtitle = QLabel('Your app for everything')
-        self.applicationsLabel = QLabel('Applications')
-        self.keyboardUtilButton = QPushButton('Keyboard Util')
-        self.gamesButton = QPushButton('Games')
-        self.title.setFont(QFont('Castellar', 45))
-        self.subtitle.setFont(QFont('Castellar', 25))
-        self.title.setAlignment(QtCore.Qt.AlignCenter)
-        self.subtitle.setAlignment(QtCore.Qt.AlignCenter)
-        self.applicationsLabel.setFont(QFont('Castellar', 20, 100))
-        self.applicationsLabel.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.master = QBoxLayout(2)
-        r1 = QBoxLayout(1)
-        r2 = QBoxLayout(1)
-        r3 = QBoxLayout(1)
-        r4 = QBoxLayout(1)
-
-        r1.addWidget(self.title)
-        r2.addWidget(self.subtitle)
-        r3.addWidget(self.applicationsLabel)
-        r4.addWidget(self.gamesButton)
-        r4.addWidget(self.keyboardUtilButton)
-
-        self.master.addLayout(r1, 20)
-        self.master.addLayout(r2, 10)
-        self.master.addLayout(r3, 20)
-        self.master.addLayout(r4, 50)
-
-        self.setLayout(self.master)
+        self.gamesWindow = None
+        self.WIPWindow = None
+    def show(self):
+        if self.window is not None and self.window.winfo_exists():
+            self.window.lift()
+            return
+        
+        self.createWindow()
     
-    def settings(self):
-        self.setWindowTitle('Stellar Client')
+    def createWindow(self):
+        if self.parent:
+            self.window = tk.Toplevel(self.parent)
+        else:
+            self.window = tk.Tk()
+        
+        self.window.title(self.title)
+        self.window.geometry(self.geometry)
+        self.window.protocol('WM_DELETE_WINDOW', self.onClose)
+        self.window.deiconify()
+        self.window.iconbitmap(r'util\stellarClientLogo.ico')
+        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
+        self.window.iconphoto(True, icon)
 
-    def buttonEvents(self):
-        self.gamesButton.clicked.connect(self.gameButton)
-        self.keyboardUtilButton.clicked.connect(self.keyboardButton)
+        self.createWidgets()
+
+    def createWidgets(self):
+        mainFrame = tk.Frame(self.window, bg='white')
+        mainFrame.pack(fill='both', expand=True, padx=10, pady=10)
+
+        titleFrame = tk.Frame(mainFrame, bg='white')
+        titleFrame.pack(fill='x', pady=(0, 10))
+
+        self.titleLabel = tk.Label(
+            titleFrame,
+            text='Stellar Client',
+            font=(
+                'Castellar', 
+                23, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.titleLabel.pack()
+
+
+        subtitleFrame = tk.Frame(mainFrame, bg='white')
+        subtitleFrame.pack(fill='x', pady=(0, 10))
+
+        self.subtitleLabel = tk.Label(
+            subtitleFrame,
+            text='Your app for everything',
+            font=(
+                'Castellar', 
+                18, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.subtitleLabel.pack()
+
+        contentFrame= tk.Frame(mainFrame, bg='grey')
+        contentFrame.pack(pady=10)
+
+        self.keyboardButton = tk.Button(
+            contentFrame,
+            text='Keyboard Util',
+            font=(
+                'Castellar',
+                14
+            ),
+            bg='light grey',
+            fg='black',
+            command=self.keyboard
+        )
+        self.keyboardButton.pack(padx=10, pady=10, side='left', fill='both', expand=False)
+
+        self.gamesButton = tk.Button(
+            contentFrame,
+            text='Games',
+            font=(
+                'Castellar',
+                14
+            ),
+            bg='light grey',
+            fg='black',
+            command=self.games
+        )
+        self.gamesButton.pack(padx=10, pady=10, side='left', fill='both', expand=False)
+
+        self.WIPButton = tk.Button(
+            contentFrame,
+            text='WIP',
+            font=(
+                'Castellar',
+                14
+            ),
+            bg='light grey',
+            fg='black',
+            command=self.wip
+        )
+        self.WIPButton.pack(padx=10, pady=10, side='left', fill='both', expand=False)
     
-    def gameButton(self):
-        if self.gamesWindow == None or self.gamesWindow.isHidden():
-            self.gamesWindow = gameScreen()
+    def keyboard(self):
+        if self.keyboardWindow == None:
+            self.keyboardWindow = keyboardWindow(self.window)
+        self.keyboardWindow.show()
+
+    def games(self):
+        if self.gamesWindow == None:
+            self.gamesWindow = keyboardWindow(self.window)
         self.gamesWindow.show()
 
-    def keyboardButton(self):
-        if self.keyboardWindow == None or self.keyboardWindow.isHidden():
-            self.keyboardWindow = keyboardWindow()
-        self.keyboardWindow.show()
+    def wip(self):
+        if self.WIPButton == None:
+            pass # self.keyboardWindow = keyboardWindow(self.window)
+        # self.keyboardWindow.show()
+
+    def onClose(self):
+        if self.window:
+            self.window.destroy()
+            self.window = None
 
 
 if __name__ in "__main__":
-    app = QApplication([])
-    main = stellarClientWidget()
-    main.show()
-    app.exec_()
+    mainWindow = stellarClientWindow()
+    mainWindow.show()
+    mainWindow.window.mainloop()

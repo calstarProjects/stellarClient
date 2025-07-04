@@ -136,12 +136,12 @@ class keyboardWindow:
     
     def macro(self):
         if self.macroWindow == None:
-            self.macroWindow = macroWindow()
+            self.macroWindow = macroWindow(self.window)
         self.macroWindow.show()
     
     def encoder(self):
         if self.encodeWindow == None:
-            self.encodeWindow = encodingWindow()
+            self.encodeWindow = encodingWindow(self.window)
         self.encodeWindow.show()
     
     def keylog(self):
