@@ -102,8 +102,7 @@ class keyboardWindow(SCWindow):
     def computerStats(self):
         if self.computerStatsWindow == None:
             self.computerStatsWindow = computerStatsWindow(self.window)
-        self.computerStatsWindow.show()
-    
+        self.computerStatsWindow.show()    
 
 
 runIfLocal(keyboardWindow, __name__)
