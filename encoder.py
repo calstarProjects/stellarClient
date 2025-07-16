@@ -15,7 +15,8 @@ Returns a print statment and the encrypted/decrypted value
 import tkinter as tk
 import tkinter.messagebox as tkmb
 import tkinter.simpledialog as tksd
-import pyperclip
+from SCWindow import SCWindow, runIfLocal
+# Reminder: pyperclip can be used for copypaste
 
 def encode(key: int = None, decrypted: str = None):    
     while key == None:
@@ -28,9 +29,7 @@ def encode(key: int = None, decrypted: str = None):
         shift = int(str(key)[i % len(str(key))])
         encrypted += chr((ord(decrypted[i]) - shift) % 0x110000)
 
-    # tkmb.showinfo('Encrypted', encrypted + ' will be copied to you clipboard')
     print(encrypted)
-    # pyperclip.copy(encrypted)
     return(encrypted)
 
 def decode(key: int = None, encrypted: str = None):
@@ -44,78 +43,13 @@ def decode(key: int = None, encrypted: str = None):
         shift = int(str(key)[i % len(str(key))])
         decrypted += chr((ord(encrypted[i]) + shift) % 0x110000)
 
-    # tkmb.showinfo('Decrypted', decrypted + ' will be copied to you clipboard')
     print(decrypted)
-    # pyperclip.copy(decrypted)
     return decrypted
 
-class encodingWindow:
-    def __init__(self, parent = None, title = 'Stellar Client Encoding/Decoding', geometry = "800x600"):
-        self.parent = parent
-        self.window = None
-        self.title = title
-        self.geometry = geometry
-
-    def show(self):
-        if self.window is not None and self.window.winfo_exists():
-            self.window.lift()
-            return
-
-        self.createWindow()
-    
-    def createWindow(self):
-        if self.parent:
-            self.window = tk.Toplevel(self.parent)
-        else:
-            self.window = tk.Tk()
-        
-        self.window.title(self.title)
-        self.window.geometry(self.geometry)
-        self.window.protocol('WM_DELETE_WINDOW', self.onClose)
-        self.window.deiconify()
-        self.window.iconbitmap(r'util\stellarClientLogo.ico')
-        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
-        self.window.iconphoto(True, icon)
-
-        self.createWidgets()
-
-    def createWidgets(self):
-        mainFrame = tk.Frame(self.window, bg='white')
-        mainFrame.pack(fill='both', expand=True, padx=10, pady=10)
-
-        titleFrame = tk.Frame(mainFrame, bg='white')
-        titleFrame.pack(fill='x', pady=(0, 10))
-
-        self.titleLabel = tk.Label(
-            titleFrame,
-            text='Stellar Client',
-            font=(
-                'Castellar', 
-                23, 
-                'bold'
-            ),
-            bg='white',
-            fg='black'
-        )
-        self.titleLabel.pack()
-
-
-        subtitleFrame = tk.Frame(mainFrame, bg='white')
-        subtitleFrame.pack(fill='x', pady=(0, 10))
-
-        self.subtitleLabel = tk.Label(
-            subtitleFrame,
-            text='Your app for everything',
-            font=(
-                'Castellar', 
-                18, 
-                'bold'
-            ),
-            bg='white',
-            fg='black'
-        )
-        self.subtitleLabel.pack()
-
+class encodingWindow(SCWindow):
+    def __init__(self):
+        super().__init__(title='Stellar Client Encryption', geometry="800x600")
+    def createCustomWidgets(self, mainFrame):
         encoderHeaderFrame = tk.Frame(mainFrame, bg='white')
         encoderHeaderFrame.pack(fill='x', pady=(0, 10))
 
@@ -161,7 +95,7 @@ class encodingWindow:
 
         keyLabel = tk.Label(
             contentFrame,
-            text='Text input',
+            text='Key input',
             font=(
                 'Cascadia Code',
                 14
@@ -179,8 +113,11 @@ class encodingWindow:
             ),
             bg='gray',
             fg='black',
-            height=2
+            height=1,
+            width=8,
+
         )
+        self.keyInput.tag_configure("centre", justify='center')
         self.keyInput.pack(padx=int(self.geometry[0:3])/6, pady=(10, 10))
 
         buttonFrame = tk.Frame(contentFrame)
@@ -220,10 +157,14 @@ class encodingWindow:
             ),
             bg='gray',
             fg='black',
-            height=2
+            height=2,
         )
-        self.output.pack(padx=int(self.geometry[0:3])/6, pady=(10, 10))
+        self.output.pack(padx=int(self.geometry[0:3])/6, pady=(10, 10), expand=False)
         self.output.config(state='disabled')
+
+    def periodic(self):
+        self.keyInput.tag_add("centre", "1.0", tk.END)
+        self.window.after(1, self.periodic)
 
     def encodeInputs(self):
         text = self.textInput.get('1.0', tk.END).strip()
@@ -253,13 +194,6 @@ class encodingWindow:
         self.output.delete('1.0', tk.END)
         self.output.insert('1.0', decode(key, text))
         self.output.config(state='disabled')    
-    def onClose(self):
-        if self.window:
-            self.window.destroy()
-            self.window = None
 
 
-if __name__ == '__main__':
-    app = encodingWindow()
-    app.show()
-    app.window.mainloop()
+runIfLocal(encodingWindow, __name__)

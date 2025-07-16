@@ -1,81 +1,20 @@
-from gameScreen import gameScreen
 from macros import macroWindow
 from encoder import encodingWindow
 from computerStats import computerStatsWindow
 from keylogger import keyLog
+from SCWindow import SCWindow, runIfLocal
 import tkinter as tk
 
-class keyboardWindow:
-    def __init__(self, parent = None, title = 'Stellar Client Keyboard Util', geometry = '800x600'):
-        # TODO: macro button, encode button, stat button, macroButton
-        self.parent = parent
-        self.window = None
-        self.title = title
-        self.geometry = geometry
-
+class keyboardWindow(SCWindow):
+    def __init__(self):
+        super().__init__(title='Stellar Client Keyboard Util', geometry="800x600")
+    def __post_init__(self):
         self.macroWindow = None
         self.encodeWindow = None
         self.keylogWindow = None
-    def show(self):
-        if self.window is not None and self.window.winfo_exists():
-            self.window.lift()
-            return
+        self.computerStatsWindow = None
         
-        self.createWindow()
-    
-    def createWindow(self):
-        if self.parent:
-            self.window = tk.Toplevel(self.parent)
-        else:
-            self.window = tk.Tk()
-        
-        self.window.title(self.title)
-        self.window.geometry(self.geometry)
-        self.window.protocol('WM_DELETE_WINDOW', self.onClose)
-        self.window.deiconify()
-        self.window.iconbitmap(r'util\stellarClientLogo.ico')
-        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
-        self.window.iconphoto(True, icon)
-
-        self.createWidgets()
-
-    def createWidgets(self):
-        mainFrame = tk.Frame(self.window, bg='white')
-        mainFrame.pack(fill='both', expand=True, padx=10, pady=10)
-
-        titleFrame = tk.Frame(mainFrame, bg='white')
-        titleFrame.pack(fill='x', pady=(0, 10))
-
-        self.titleLabel = tk.Label(
-            titleFrame,
-            text='Stellar Client',
-            font=(
-                'Castellar', 
-                23, 
-                'bold'
-            ),
-            bg='white',
-            fg='black'
-        )
-        self.titleLabel.pack()
-
-
-        subtitleFrame = tk.Frame(mainFrame, bg='white')
-        subtitleFrame.pack(fill='x', pady=(0, 10))
-
-        self.subtitleLabel = tk.Label(
-            subtitleFrame,
-            text='Your app for everything',
-            font=(
-                'Castellar', 
-                18, 
-                'bold'
-            ),
-            bg='white',
-            fg='black'
-        )
-        self.subtitleLabel.pack()
-
+    def createCustomWidgets(self, mainFrame):
         keyboardUtilHeaderFrame = tk.Frame(mainFrame, bg='white')
         keyboardUtilHeaderFrame.pack(fill='x', pady=(0, 10))
 
@@ -133,7 +72,20 @@ class keyboardWindow:
             command=self.keylog
         )
         keyLogButton.pack(side='left', fill='both', padx=10, expand=False)
-    
+            
+        computerStatsButton = tk.Button(
+            contentFrame,
+            text='Computer Stats',
+            font=(
+                'Arial',
+                12
+            ),
+            bg='gray',
+            fg='black',
+            command=self.computerStats
+        )
+        computerStatsButton.pack(side='left', fill='both', padx=10, expand=False)
+            
     def macro(self):
         if self.macroWindow == None:
             self.macroWindow = macroWindow(self.window)
@@ -146,16 +98,12 @@ class keyboardWindow:
     
     def keylog(self):
         keyLog('ctrl')
+
+    def computerStats(self):
+        if self.computerStatsWindow == None:
+            self.computerStatsWindow = computerStatsWindow(self.window)
+        self.computerStatsWindow.show()
     
-    def onClose(self):
-        if self.window:
-            self.window.destroy()
-            self.window = None
 
 
-
-
-if __name__ == "__main__":
-    app = keyboardWindow()
-    app.show()
-    app.window.mainloop()
+runIfLocal(keyboardWindow, __name__)

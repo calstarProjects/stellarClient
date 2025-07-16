@@ -4,14 +4,13 @@ import time
 import psutil
 import datetime
 import tkinter as tk
+from SCWindow import SCWindow, runIfLocal
 
 
-class computerStatsWindow:
-    def __init__(self, parent = None, title='Stellar Client Computer Stats', geometry="800x600"):
-        self.parent = parent
-        self.window = None
-        self.title = title
-        self.geometry = geometry
+class computerStatsWindow(SCWindow):
+    def __init__(self):
+        super().__init__(title='Stellar Client Computer Stats', geometry="800x1200")
+    def __post_init__(self):
         self.size = pyautogui.size()
         self.timerJob = None
         self.isRunning = None
@@ -21,65 +20,10 @@ class computerStatsWindow:
             self.window.lift()
             return
         
+        self.isRunning = True
         self.createWindow()
-        self.startMonitor()
 
-    def createWindow(self):
-        if self.parent:
-            self.window = tk.Toplevel(self.parent)
-        else:
-            self.window = tk.Tk()
-        
-        self.window.title(self.title)
-        self.window.geometry(self.geometry)
-        self.window.protocol('WM_DELETE_WINDOW', self.onClose)
-        self.window.deiconify()
-        self.window.iconbitmap(r'util\stellarClientLogo.ico')
-        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
-        self.window.iconphoto(True, icon)
-
-        self.window.bind('<Escape>', lambda e: self.onClose)
-        self.window.bind('<Alt-Key-4>', lambda e: self.onClose)
-        
-        self.createWidgets()
-
-    def createWidgets(self):
-        mainFrame = tk.Frame(self.window, bg='white')
-        mainFrame.pack(fill='both', expand=True, padx=10, pady=10)
-
-        titleFrame = tk.Frame(mainFrame, bg='white')
-        titleFrame.pack(fill='x', pady=(0, 10))
-
-        self.titleLabel = tk.Label(
-            titleFrame,
-            text='Stellar Client',
-            font=(
-                'Castellar', 
-                23, 
-                'bold'
-            ),
-            bg='white',
-            fg='black'
-        )
-        self.titleLabel.pack()
-
-
-        subtitleFrame = tk.Frame(mainFrame, bg='white')
-        subtitleFrame.pack(fill='x', pady=(0, 10))
-
-        self.subtitleLabel = tk.Label(
-            subtitleFrame,
-            text='Your app for everything',
-            font=(
-                'Castellar', 
-                18, 
-                'bold'
-            ),
-            bg='white',
-            fg='black'
-        )
-        self.subtitleLabel.pack()
-
+    def createCustomWidgets(self, mainFrame):
         statsHeaderFrame = tk.Frame(mainFrame, bg='white')
         statsHeaderFrame.pack(fill='x', pady=(0, 10))
 
@@ -143,12 +87,8 @@ class computerStatsWindow:
             fg='black'
         )
         instructions.pack(pady=(10, 0))
-    
-    def startMonitor(self):
-        self.isRunning = True
-        self.updateStats()
-    
-    def updateStats(self):
+        
+    def periodic(self):
         if not self.isRunning or not self.window or not self.window.winfo_exists():
             return
         
@@ -226,13 +166,7 @@ class computerStatsWindow:
         self.statsText.config(state='disabled')
 
         if self.isRunning and self.window and self.window.winfo_exists():
-            self.timerJob = self.window.after(1000, self.updateStats)
-
-    def onClose(self):
-        self.stopMonitor()
-        if self.window:
-            self.window.destroy()
-            self.window = None
+            self.timerJob = self.window.after(1000, self.periodic)
     
     def stopMonitor(self):
         self.isRunning = False
@@ -241,7 +175,4 @@ class computerStatsWindow:
             self.timerJob = None
 
         
-if __name__ == '__main__':
-    app = computerStatsWindow(geometry='400x300')
-    app.show()
-    app.window.mainloop()
+runIfLocal(computerStatsWindow, __name__)
