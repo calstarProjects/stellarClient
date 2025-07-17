@@ -1,7 +1,6 @@
 import pygame
 import math
 import time
-import keyboard
 import tkinter
 import tkinter.messagebox
 import tkinter.simpledialog
@@ -11,19 +10,46 @@ import pyautogui
 root = tkinter.Tk()
 root.withdraw()
 root.attributes('-topmost', True)
-root.update
+root.update()
+screen = None
+screenWidth = 800
+screenHeight = 600
 
-pygame.init()
+def initScreen():
+    global screen, screenWidth, screenHeight
+    try:
+        pygame.quit()
+    except pygame.error:
+        pass
+    pygame.init()
 
-# Set up the window dimentions
-if tkinter.messagebox.askyesno('Screen Setup', 'Would you like a custom window size? (Alt is fullscreen)'):
-    screenWidth = tkinter.simpledialog.askinteger('Screen Dimentions', 'What is your desired width?')
-    screenHeight = tkinter.simpledialog.askinteger('Screen Dimentions', 'What is your desired height?')
-else:
-    screenWidth, screenHeight = pyautogui.size()
+    # Set up the window dimentions
+    if tkinter.messagebox.askyesno('Screen Setup', 'Would you like a custom window size? (Alt is fullscreen)'):
+        screenWidth = tkinter.simpledialog.askinteger('Screen Dimentions', 'What is your desired width?')
+        screenHeight = tkinter.simpledialog.askinteger('Screen Dimentions', 'What is your desired height?')
+    else:
+        screenWidth, screenHeight = pyautogui.size()
 
-print (screenWidth, screenHeight)
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+    # print (screenWidth, screenHeight)
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
+
+    return screen
+
+def getScreen():
+    global screen
+    try:
+        if screen is None or pygame.display.get_surface() is None:
+            return initScreen()
+        return screen
+    except pygame.error:
+        return initScreen()
+
+try:
+    initScreen()
+except:
+    pygame.init()
+    screenWidth, screenHeight = 800, 600
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Sprite list for ticking
 spriteList = pygame.sprite.Group()
@@ -80,7 +106,7 @@ class sprite(pygame.sprite.Sprite):
     def applyForce(self, xForce: int, yForce: int):
         self.xVel += xForce
         self.yVel += yForce
-    def setPos(self, x, y):
+    def setPos(self, x: int, y: int):
         self.rect.centerx = x
         self.rect.centery = y
     # Updating pos
@@ -143,7 +169,7 @@ class sprite(pygame.sprite.Sprite):
     #     ):
     #             collided =  True
     # return collided
-    def resize(self, width, height):
+    def resize(self, width: int, height: int):
         # self.image = pygame.transform.flip(self.inverted, True, False)
         self.image = pygame.transform.scale(
             self.baseImg, 
@@ -174,13 +200,17 @@ textSpriteList = pygame.sprite.Group()
 class textSprite(pygame.sprite.Sprite):
     def __init__(self, startText: str, x: int, y: int):
         super().__init__()
-        self.font = pygame.font.Font('freesansbold.ttf', 20)
+        try:
+            self.font = pygame.font.Font('freesansbold.ttf', 20)
+        except:
+            pygame.font.init()
+            self.font = pygame.font.Font('freesansbold.ttf', 20)
         self.image = self.font.render(startText, True, (255, 255, 255), (0, 0, 0))
         self.rect = self.image.get_rect()
         spriteList.add(self)
         textSpriteList.add(self)
         self.name = startText
-        self.rect.topleft = x, y
+        self.rect.center = x, y
     # Pos Updater
     def setPos(self, x, y):
         self.rect.left = x

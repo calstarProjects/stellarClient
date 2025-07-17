@@ -1,14 +1,22 @@
 """A stupid bullet hell game by Calstar9000 using Pokemon Sprites
-Credit to my friend Sage for the Ceruledge sprite
+Credit to my friend Sage for the sprite
 """
 
-import pygame
-from sprites import *
+# import pygame
+# from sprites import *
 
 
 def initGameOne():
+    import pygame
+    from sprites import sprite, textSprite, spriteList, textSpriteList, screenWidth, screenHeight, time, math, initScreen, getScreen, screen
 
-    screen = pygame.display.set_mode((screenWidth, screenHeight))
+    if screen == None:
+        screen = initScreen()
+    else:
+        screen = getScreen()
+
+    spriteList.empty()
+    textSpriteList.empty()
 
     # Game Label
     pygame.display.set_caption("Game One")
@@ -16,21 +24,21 @@ def initGameOne():
     # BG Image
     # bgImage = pygame.image.load('')
 
-    # Ceruledge init
-    ceru = sprite(
-        r'util\ceruledge.png', 
+    # player sprite init
+    ps = sprite(
+        'util/playerSprite.png',
         50, 
         0, 
         200, 
         200, 
-        'ceru', 
+        'playerSprite', 
         15
     )
-    ceruSpeedMult = 1
-    ceruIFrames = 0
-    ceruProtectUses = 0
-    ceruProtectUsesMax = 0
-    ceruCoins = 0
+    psSpeedMult = 1
+    psIFrames = 0
+    psProtectUses = 0
+    psProtectUsesMax = 0
+    psCoins = 0
 
     # Protect setup
     protectSprite = sprite(
@@ -45,9 +53,19 @@ def initGameOne():
     protecting = False
     protectingItr = 0
     spriteList.add(protectSprite)
+    try:
+        protectSound = pygame.mixer.Sound(r'util\explosion.wav')
+        protectSound.set_volume(0.1)
+    except:
+        try:
+            pygame.mixer.init()
+            protectSound = pygame.mixer.Sound(r'util\explosion.wav')
+            protectSound.set_volume(0.1)
+        except:
+            print('Weird error with music thats not the mixer????')
 
     # Text init
-    ceruLabel = textSprite("Yo, its ceru, and im here to fight ya cuz you're in my house", 0, 0)
+    psLabel = textSprite("Yo, its ps, and im here to fight ya cuz you're in my house", 0, 0)
 
     # Enemy setup
     enemies = pygame.sprite.Group()
@@ -113,16 +131,23 @@ def initGameOne():
         screenWidth,
         0
     )
+    restartLabel = textSprite(
+        'YOU DIED. Run into to restart',
+        screenWidth / 2,
+        screenHeight / 2
+    )
     shopSprites.add(healthUpgrade, speedUpgrade, protectUses, exitButton)
     shopTextSprites.add(healthLabel, speedLabel, protectLabel, exitLabel)
     for i in shopSprites:
         i.setVisible(False)
     for i in shopTextSprites:
         i.setVisible(False)
+    restartLabel.setVisible(False)
     healthUpgradeCost = 2
     speedUpgradeCost = 2
     protectUsesCost = 4
     shopMode = False
+    gameEnd = False
 
     # Loop setup
     exit = False
@@ -136,9 +161,10 @@ def initGameOne():
 
     # Loop
     while not exit:
+        # Get key list
+        keys = pygame.key.get_pressed()
+
         # Exit funcs
-        if keyboard.is_pressed('esc'):
-            exit = True
         for i in pygame.event.get():
             if i.type == pygame.QUIT:
                 exit = True
@@ -149,47 +175,51 @@ def initGameOne():
                         if j.type == pygame.MOUSEMOTION:
                             cont = True
         
-        # Ceruledge movment
-        if keyboard.is_pressed('up'):
-            ceru.applyForce(0, -5 * ceruSpeedMult)
-        if keyboard.is_pressed('down'):
-            ceru.applyForce(0, 5 * ceruSpeedMult)
-        if keyboard.is_pressed('left'):
-            ceru.applyForce(-5 * ceruSpeedMult, 0)
-        if keyboard.is_pressed('right'):
-            ceru.applyForce(5 * ceruSpeedMult, 0)
-        
+        if keys[pygame.K_ESCAPE]:
+            exit = True
+
+        # player sprite movment
+        if keys[pygame.K_UP]:
+            ps.applyForce(0, -5 * psSpeedMult)
+        if keys[pygame.K_DOWN]:
+            ps.applyForce(0, 5 * psSpeedMult)
+        if keys[pygame.K_LEFT]:
+            ps.applyForce(-5 * psSpeedMult, 0)
+        if keys[pygame.K_RIGHT]:
+            ps.applyForce(5 * psSpeedMult, 0)
+    
         # Protect
-        if (keyboard.is_pressed('space') and ceruProtectUses > 0) and not protecting:
-            ceruProtectUses -= 1
-            # protectSprite.setPos(ceru.rect.centerx, ceru.rect.centery)
-            protectSprite.setVisible(True)
-            protecting = True
+        if keys[pygame.K_SPACE] and not protecting:
             # print('protecting start: ', protecting)
-        elif keyboard.is_pressed('space') and (ceruProtectUses == 0) and not protecting:
-            ceruLabel.relabel('No Protect Uses')
+            if psProtectUses > 0:
+                psLabel.relabel('No Protect Uses')
+                psProtectUses -= 1
+                protectSprite.setVisible(True)
+                protecting = True
+                protectSound.play(0)
+
         
         if protecting:
-            # print('protecting: ', protecting, ', ', protectingItr, ', ', protectSprite.rect.width, ', ', protectSprite.rect.center, ', ', ceru.rect.center)
             if protectingItr < 75:
                 protectingItr += 1
                 protectSprite.resize(protectingItr * 1.3 + 283, protectingItr * 1.3 + 283)
-                protectSprite.setPos(ceru.rect.centerx, ceru.rect.centery)
+                protectSprite.setPos(ps.rect.centerx, ps.rect.centery)
                 protectSprite.update()
             else:
                 protectingItr = 0
                 protecting = False
                 protectSprite.setPos(-400, -400)
         else: 
+            protectSprite.resize(0, 0)
             protectSprite.setVisible(False)
         #Bounding 
-        if abs(ceru.xVel) > 25:
-            ceru.xVel *= 0.8
-        if abs(ceru.yVel) > 25:
-            ceru.yVel *= 0.8
+        if abs(ps.xVel) > 25:
+            ps.xVel *= 0.8
+        if abs(ps.yVel) > 25:
+            ps.yVel *= 0.8
 
         # Label movment
-        ceruLabel.setPos(ceru.rect.right, ceru.rect.top)
+        psLabel.setPos(ps.rect.right, ps.rect.top)
 
         # Sprite and screen updates
         spriteList.update()
@@ -203,9 +233,9 @@ def initGameOne():
         currentTime = time.time()
         # Enemy movment
         if runEnemies:
-            if time.gmtime(currentTime).tm_sec % 10 == 1 and shadowBalls < 3:
-                if shadowBalls < 3:
-                    if (round(currentTime * 100) % 30) == 1:
+            if time.gmtime(currentTime).tm_sec % 10 == 1 and shadowBalls < 5:
+                if shadowBalls < 5:
+                    if (round(currentTime * 100) % (20 / (level + 1))) == 1:
                         obj = sprite(
                             r'util\shadowBallSprite.png', 
                             ((screenWidth / 2) - 20), 
@@ -221,27 +251,27 @@ def initGameOne():
             for i in enemies:
                 mod = 1 + (enemies.sprites().index(i) / 20)
                 angleTo = math.atan2(
-                    ceru.rect.centery-i.rect.centery, 
-                    ceru.rect.centerx-i.rect.centerx
+                    ps.rect.centery-i.rect.centery, 
+                    ps.rect.centerx-i.rect.centerx
                 ) * mod
                 i.applyForce(math.cos(angleTo) * enemySpeed, math.sin(angleTo) * enemySpeed)
-                if ceru.hitsSprite(i) and not ceruIFrames > 0:
-                    ceru.hp -= 1
-                    ceruIFrames = 100
-                    ceruLabel.relabel('HP: ' + str(ceru.hp) + '/' + str(ceru.maxHp))
+                if ps.hitsSprite(i) and not psIFrames > 0:
+                    ps.hp -= 1.5 ** level
+                    psIFrames = 100
+                    psLabel.relabel('HP: ' + str(ps.hp) + '/' + str(ps.maxHp))
                     i.kill()
                 if protectSprite.hitsSprite(i):
                     i.applyForce(-math.cos(angleTo) * 100, -math.sin(angleTo) * 100)
-        if ceruIFrames > 0:
+        if psIFrames > 0:
             if round(currentTime * 2) / 2 == round(prevSec * 2) / 2 + 0.5:
-                ceru.faded = not ceru.faded
+                ps.faded = not ps.faded
         else:
-            ceru.faded = False
+            ps.faded = False
         if round(currentTime * 2) / 2 == round(prevSec * 2) / 2 + 0.5:
             prevSec = currentTime
         
         # Shop start
-        if (time.gmtime(time.time()).tm_sec) == (startSec + 30) % 60 and not shopMode:
+        if (time.gmtime(time.time()).tm_sec) == (startSec + 40) % 60 and not shopMode:
             runEnemies = False
             for i in shopSprites:
                 i.setVisible(True)
@@ -251,12 +281,12 @@ def initGameOne():
             exitLabel.setPos(exitLabel.rect.left, exitButton.rect.top - exitLabel.rect.height)
             for i in enemies:
                 i.kill()
-            ceruCoins += ceru.hp
-            realSpeedMult = ceruSpeedMult
-            ceruSpeedMult = 1
-            ceru.setPos(screenWidth / 2, (screenHeight / 4) * 3)
-            ceru.xVel = 0
-            ceru.yVel = 0
+            psCoins += ps.hp
+            realSpeedMult = psSpeedMult
+            psSpeedMult = 1
+            ps.setPos(screenWidth / 2, (screenHeight / 4) * 3)
+            ps.xVel = 0
+            ps.yVel = 0
             shopMode = True    
 
         # During shop updates
@@ -268,56 +298,91 @@ def initGameOne():
 
             hitSprite = ''
             for i in shopSprites:
-                if ceru.hitsSprite(i):
-                    ceru.setPos(ceru.rect.centerx, ceru.rect.centery + 150)
+                if ps.hitsSprite(i):
+                    ps.setPos(ps.rect.centerx, ps.rect.centery + 150)
                     hitSprite = i
                     # print (i.name)
             if hitSprite != '':
                 match hitSprite.name:
                     case 'healthUpgrade':
-                        if healthUpgradeCost <= ceruCoins:
-                            ceruCoins -= healthUpgradeCost
-                            ceruLabel.relabel(('Bought Health Upgrade for ' + str(healthUpgradeCost)))
+                        if healthUpgradeCost <= psCoins:
+                            psCoins -= healthUpgradeCost
+                            psLabel.relabel(('Bought Health Upgrade for ' + str(healthUpgradeCost)))
                             healthUpgradeCost = round(healthUpgradeCost * 1.5)
                             healthLabel.relabel('Hit to gain health upgrade, Cost:' + str(healthUpgradeCost))
-                            ceru.maxHp += 1
+                            ps.maxHp += 1
                         else:
-                            ceruLabel.relabel('ERR: Too expensive')
+                            psLabel.relabel('ERR: Too expensive')
                     case 'speedUpgrade':
-                        if speedUpgradeCost <= ceruCoins:
-                            ceruLabel.relabel(('Bought Speed Upgrade for ' +  str(speedUpgradeCost)))
-                            ceruCoins -= speedUpgradeCost
+                        if speedUpgradeCost <= psCoins:
+                            psLabel.relabel(('Bought Speed Upgrade for ' +  str(speedUpgradeCost)))
+                            psCoins -= speedUpgradeCost
                             speedUpgradeCost = round(speedUpgradeCost * 1.5)
                             speedLabel.relabel('Hit to gain speed upgrade, Cost:' + str(speedUpgradeCost))
                             realSpeedMult += speedUpgradeCost/20
                         else:
-                            ceruLabel.relabel('ERR: Too expensive')
+                            psLabel.relabel('ERR: Too expensive')
                     case 'protectUse':
-                        if protectUsesCost <= ceruCoins:
-                            ceruLabel.relabel(('Bought Protect Use for ' + str(protectUsesCost)))
-                            ceruCoins -= protectUsesCost
+                        if protectUsesCost <= psCoins:
+                            psLabel.relabel(('Bought Protect Use for ' + str(protectUsesCost)))
+                            psCoins -= protectUsesCost
                             protectUsesCost = round(protectUsesCost * 1.5)
                             protectLabel.relabel('Hit to gain protect uses, Cost:' + str(protectUsesCost))
-                            ceruProtectUsesMax += 1
+                            psProtectUsesMax += 1
                         else:
-                            ceruLabel.relabel('ERR: Too expensive')
+                            psLabel.relabel('ERR: Too expensive')
                     case 'exit':
                         for i in shopSprites:
                             i.setVisible(False)
                         for i in shopTextSprites:
                             i.setVisible(False)
-                        ceru.hp = ceru.maxHp
-                        ceruProtectUses = ceruProtectUsesMax
+                        ps.hp = ps.maxHp
+                        psProtectUses = psProtectUsesMax
                         shopMode = False
                         runEnemies = True
-                        ceruSpeedMult = realSpeedMult
+                        psSpeedMult = realSpeedMult
                         startSec = time.gmtime(time.time()).tm_sec
                         level += 1
                         enemySpeed = 1 + (0.5 * level)
-        coinsLabel.relabel('Coins: ' + str(ceruCoins))
+        if ps.hp <= 0:
+            ps.hp = 0.1
+            ps.setPos(screenWidth / 2, (screenHeight / 4) * 3)
+            runEnemies = False
+            for i in enemies:
+                i.kill()
+            restartLabel.setVisible(True)
+            gameEnd = True
+        
+        if gameEnd:
+            if ps.hitsSprite(restartLabel):
+                enemySpeed = 1
+                ps.maxHp = 15
+                ps.hp = ps.maxHp
+                psSpeedMult = 1
+                psIFrames = 0
+                psProtectUses = 0
+                psProtectUsesMax = 0
+                psCoins = 0
+                healthUpgradeCost = 2
+                speedUpgradeCost = 2
+                protectUsesCost = 4
+                shopMode = False
+                gameEnd = False
+                shadowBalls = 0
+                cont = True
+                prevSec = time.time()
+                startSec = time.gmtime(time.time()).tm_sec
+                runEnemies = True
+                level = 0
+                restartLabel.setVisible(False)
+        
+        coinsLabel.relabel('Coins: ' + str(psCoins))
         coinsLabel.rect.topright = (screenWidth, 0)
-        ceruIFrames -= 1
-        enemySpeed += 0.001
+        psIFrames -= 1
+        if not gameEnd:
+            enemySpeed += 0.001
+    screen = None
     pygame.quit()
 
-# runGameOne()
+if __name__ == "__main__":
+    initGameOne()

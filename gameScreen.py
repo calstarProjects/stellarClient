@@ -1,71 +1,135 @@
 import pyautogui
 import threading
-# from keylogger import keyLog, keyLogPrint
-# from macros import runMacroChoice
-# from encoder import encode, decode
-# from gameOne import initGameOne
-from runGameOne import runGameOne
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QBoxLayout, QWidget
-from PyQt5.QtGui import QFont
-from PyQt5 import QtCore
+import tkinter as tk
 
 
 screenwidth, screenlength = pyautogui.size()
 
-class gameWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.loadUi()
-        self.settings()
-        self.buttonEvents()
-
-    def loadUi(self):
-        self.title = QLabel('Stellar Client')
-        self.subtitle = QLabel('Your app for everything\n')
-        self.gamesLabel = QLabel('Games')
-        self.gameOneButton = QPushButton('Bullet hell rougelike')
-        self.gameTwoButton = QPushButton('Games')
-        self.title.setFont(QFont('Castellar', 25))
-        self.subtitle.setFont(QFont('Castellar', 15))
-        self.gamesLabel.setFont(QFont('Castellar', 20, 100))
-        self.gameOneButton.setFont(QFont('Castellar', 15))
-        self.gameTwoButton.setFont(QFont('Castellar', 15))
-        self.title.setAlignment(QtCore.Qt.AlignCenter)
-        self.subtitle.setAlignment(QtCore.Qt.AlignCenter)
-        self.gamesLabel.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.master = QBoxLayout(2)
-        r1 = QBoxLayout(1)
-        r2 = QBoxLayout(1)
-        r3 = QBoxLayout(1)
-        r4 = QBoxLayout(1)
-
-        r1.addWidget(self.title)
-        r2.addWidget(self.subtitle)
-        r3.addWidget(self.gamesLabel)
-        r4.addWidget(self.gameTwoButton)
-        r4.addWidget(self.gameOneButton)
-
-        self.master.addLayout(r1, 20)
-        self.master.addLayout(r2, 10)
-        self.master.addLayout(r3, 20)
-        self.master.addLayout(r4, 50)
-
-        self.setLayout(self.master)
+class gameScreen:
+    def __init__(self, parent = None, title = 'Stellar Client Games', geometry = '800x600'):
+        self.parent = parent
+        self.window = None
+        self.title = title
+        self.geometry = geometry
     
-    def settings(self):
-        self.setWindowTitle('Stellar Client Games')
+    def show(self):
+        if self.window is not None and self.window.winfo_exists():
+            self.window.lift()
+            return
+        
+        self.createWindow()
     
-    def buttonEvents(self):
-        self.gameOneButton.clicked.connect(self.gameOneRun)
+    def createWindow(self):
+        if self.parent:
+            self.window = tk.Toplevel(self.parent)
+        else:
+            self.window = tk.Tk()
+        
+        self.window.title(self.title)
+        self.window.geometry(self.geometry)
+        self.window.protocol('WM_DELETE_WINDOW', self.onClose)
+        self.window.deiconify()
+        self.window.iconbitmap(r'util\stellarClientLogo.ico')
+        icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
+        self.window.iconphoto(True, icon)
 
-    def gameOneRun(self):
-        runGameOne()
-        print('game1ing')
+        self.createWidgets()
+
+    def createWidgets(self):
+        mainFrame = tk.Frame(self.window, bg='white')
+        mainFrame.pack(fill='both', expand=True, padx=10, pady=10)
+
+        titleFrame = tk.Frame(mainFrame, bg='white')
+        titleFrame.pack(fill='x', pady=(0, 10))
+
+        self.titleLabel = tk.Label(
+            titleFrame,
+            text='Stellar Client',
+            font=(
+                'Castellar', 
+                23, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.titleLabel.pack()
 
 
-# if __name__ in "__main__":
-#     gameApp = QApplication([])
-#     game = gameWidget()
-#     game.show()
-#     gameApp.exec_()
+        subtitleFrame = tk.Frame(mainFrame, bg='white')
+        subtitleFrame.pack(fill='x', pady=(0, 10))
+
+        self.subtitleLabel = tk.Label(
+            subtitleFrame,
+            text='Your app for everything',
+            font=(
+                'Castellar', 
+                18, 
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        self.subtitleLabel.pack()
+
+        gamesHeaderFrame = tk.Frame(mainFrame, bg='white')
+        gamesHeaderFrame.pack(fill='x', pady=(0, 10))
+
+        gamesHeader = tk.Label(
+            gamesHeaderFrame,
+            text='Games',
+            font=(
+                'Castellar',
+                16,
+                'bold'
+            ),
+            bg='white',
+            fg='black'
+        )
+        gamesHeader.pack()
+
+        gamesFrame = tk.Frame(mainFrame, bg='white')
+        gamesFrame.pack(fill='both', expand=True)
+
+        gameOneButton = tk.Button(
+            gamesFrame,
+            text='Bullet Hell Roguelike',
+            font=(
+                'Castellar',
+                16
+            ),
+            bg='gray',
+            fg='white',
+            width=15,  # int(self.geometry[0:3])//3
+            height=2,
+            command=self.gameOne
+        )
+        gameOneButton.pack(side='left', fill='both', padx=(0, 5), expand=False)
+
+        gameTwoButton = tk.Button(
+            gamesFrame,
+            text='Game Two',  # TODO: Update with actual game name
+            font=(
+                'Castellar',
+                16
+            ),
+            bg='gray',
+            fg='white',
+            width=15, # int(self.geometry[0:3])//3
+            height=2
+        )
+        gameTwoButton.pack(side='left', fill='both', padx=(5, 0), expand=False)    
+    def gameOne(self):
+        from gameOne import initGameOne
+        initGameOne()
+
+    def onClose(self):
+        if self.window:
+            self.window.destroy()
+            self.window = None
+        
+
+if __name__ == "__main__":
+    app = gameScreen()
+    app.show()
+    app.window.mainloop()

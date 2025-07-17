@@ -2,7 +2,3 @@ keyboard
 pyautogui
 pygame
 PyQt5
-psutil
-pyscreeze
-rich
-requests
