@@ -8,8 +8,8 @@ from SCWindow import SCWindow, runIfLocal
 
 
 class computerStatsWindow(SCWindow):
-    def __init__(self):
-        super().__init__(title='Stellar Client Computer Stats', geometry="800x1200")
+    def __init__(self, parent=None, title='Stellar Client Computer Stats', geometry="800x1200"):
+        super().__init__(parent, title, geometry)
     def __post_init__(self):
         self.size = pyautogui.size()
         self.timerJob = None

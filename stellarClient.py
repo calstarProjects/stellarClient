@@ -145,7 +145,7 @@ class stellarClientWindow:
 
     def games(self):
         if self.gamesWindow == None:
-            self.gamesWindow = keyboardWindow(self.window)
+            self.gamesWindow = gameScreen(self.window)
         self.gamesWindow.show()
 
     def wip(self):

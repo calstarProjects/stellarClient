@@ -20,6 +20,7 @@ def holdKey(key: str, stop: bool = False):
         keyboard.release(key)
         
 def getInfo(chosenMacro):
+    key = None
     match chosenMacro:
         case 'autoClick':
             pass
@@ -35,7 +36,7 @@ def getInfo(chosenMacro):
             key = keyboard.read_key()
             pyautogui.press('backspace')
             tkmb.askokcancel('Key Choice', 'You have chosen ' + key + ' as your key')
-    if key:
+    if key != None:
         return key
 
 def runMacro(chosenMacro: str, key: str = None):

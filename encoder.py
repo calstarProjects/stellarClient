@@ -47,8 +47,8 @@ def decode(key: int = None, encrypted: str = None):
     return decrypted
 
 class encodingWindow(SCWindow):
-    def __init__(self):
-        super().__init__(title='Stellar Client Encryption', geometry="800x600")
+    def __init__(self, parent=None, title='Stellar Client Encryption', geometry="800x600"):
+        super().__init__(parent, title, geometry)
     def createCustomWidgets(self, mainFrame):
         encoderHeaderFrame = tk.Frame(mainFrame, bg='white')
         encoderHeaderFrame.pack(fill='x', pady=(0, 10))

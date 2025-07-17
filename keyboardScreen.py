@@ -6,8 +6,8 @@ from SCWindow import SCWindow, runIfLocal
 import tkinter as tk
 
 class keyboardWindow(SCWindow):
-    def __init__(self):
-        super().__init__(title='Stellar Client Keyboard Util', geometry="800x600")
+    def __init__(self, parent=None, title='Stellar Client Keyboard Util', geometry="800x600"):
+        super().__init__(parent, title, geometry)
     def __post_init__(self):
         self.macroWindow = None
         self.encodeWindow = None
