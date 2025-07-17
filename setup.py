@@ -3,7 +3,7 @@ import subprocess
 import sys
 import os
 
-venv_name = "localVenv"
+venv_name = ".venv"
 requirements_file = "libReqs.txt"
 main_script_name = "stellarClient.py"  # Replace with the actual name of your main script
 
