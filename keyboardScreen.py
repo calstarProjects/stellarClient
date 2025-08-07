@@ -8,7 +8,7 @@ import tkinter as tk
 class keyboardWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Keyboard Util', geometry="800x600"):
         super().__init__(parent, title, geometry)
-    def __post_init__(self):
+
         self.macroWindow = None
         self.encodeWindow = None
         self.keylogWindow = None

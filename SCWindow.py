@@ -1,31 +1,57 @@
 import tkinter as tk
 
-"""Encoding Function for the Stellar Client app
-Basic key based encryption, uses tkinter to get input for the key and string
-
-Returns a print statment and the encrypted/decrypted value
-
-# Args:
-    ##  Optional:
-    ### - key -- The value that is used for encryption and decryption
-    ### - encrypted/decrypted -- The acutal string to be modified
-
-# Returns:
-    ### - Encrypted/Decrypted
-"""
-
-import tkinter as tk
-
 class SCWindow:
+    """The base Stellar Client Window Object/Class
+    Functions*:
+
+    - __init__:
+        - Initialize function
+
+    - show:
+        - Makes the window create/lift itself
+    
+    - createWindow: 
+        - Makes the self.window object
+    
+    - createWidgets:
+        - Makes basic Stellar Client Header
+
+    - createCustomWidgets:
+        - Customizable extra tk window objects
+    
+    - periodic:
+        - Periodic function called repeatedly
+        - NOTE: Make sure to call super.periodic() within your customized periodic function to maintain a loop
+
+    - onClose:
+        - Close function that runs when the window is closed by the user
+
+    *None of these need be called by you to run the application except self.show() and self.window.mainloop() (or occasionally self.periodic to start the periodic function)
+    When making a custom window, you can alter the __init__ function and the createCustomWidgets like so
+    
+    def __init__(self, parent=None, title='<Your Window's Name Here>', geometry="800x600", <extra inputs>):
+        super().__init__(parent, title, geometry)
+
+        self.<extra traits> = <extra inputs>
+        
+    def createCustomWidgets(self, mainFrame):
+        extraHeaderFrame = tk.Frame(mainFrame, bg='white')
+        extraHeaderFrame.pack(fill='x', pady=(0, 10))
+
+        extraHeader = tk.Label(
+            keyboardUtilHeaderFrame,
+            text='EXTRA',
+            bg='white',
+            fg='black'
+        )
+        extraHeader.pack(expand=True)
+    """
+
     def __init__(self, parent = None, title = 'Stellar Client', geometry = "800x600"):
         self.parent = parent
         self.window = None
         self.title = title
         self.geometry = geometry
-        self.__post_init__()
-
-    def __post_init__(self):
-        pass
 
     def show(self):
         if self.window is not None and self.window.winfo_exists():
