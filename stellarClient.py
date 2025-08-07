@@ -6,7 +6,7 @@ Functions:
     - Autoclickers, other macros, keylogger if you want to?
 
 - Games:
-    - For now, just a rougelike game
+    - For now, just a roguelike game
 
 In Progress:
 

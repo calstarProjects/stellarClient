@@ -55,7 +55,8 @@ class gameScreen(SCWindow):
             bg='gray',
             fg='white',
             width=15, # int(self.geometry[0:3])//3
-            height=2
+            height=2,
+            command= lambda: print("Not implemented yet")
         )
         gameTwoButton.pack(side='left', fill='both', padx=(5, 0), expand=False)    
 

@@ -39,7 +39,7 @@ class SCWindow:
         extraHeaderFrame.pack(fill='x', pady=(0, 10))
 
         extraHeader = tk.Label(
-            keyboardUtilHeaderFrame,
+            extraHeaderFrame,
             text='EXTRA',
             bg='white',
             fg='black'
