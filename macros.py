@@ -32,12 +32,12 @@ def getInfo(chosenMacro):
             tkmb.askokcancel('Key Choice', 'After closing this box, press the key you with to autoKey')
             key = keyboard.read_key()
             pyautogui.press('backspace')
-            tkmb.askokcancel('Key Choice', 'You have chosen ' + key + ' as your key')
+            tkmb.askokcancel('Key Choice', f'You have chosen {key} as your key')
         case 'holdKey':
             tkmb.askokcancel('Key Choice', 'After closing this box, press the key you with to holdKey')
             key = keyboard.read_key()
             pyautogui.press('backspace')
-            tkmb.askokcancel('Key Choice', 'You have chosen ' + key + ' as your key')
+            tkmb.askokcancel('Key Choice', f'You have chosen {key} as your key')
     if key != None:
         return key
 
@@ -78,7 +78,7 @@ def runMacro(chosenMacro: str, key: str = None):
         if ((time.localtime().tm_min == desiredEndTime) and (time.localtime().tm_sec == startSecs)):
             print('should be done')
             break
-    tkmb.showinfo('Task Finished', ('Desired Minutes = ' + str(desiredMins) + ', Start Seconds = ' + str(startSecs) + ', Desired End Time = ' + str(desiredEndTime) + ', Start Time ' + str(startTime) + ', End Time ' + str(time.ctime(time.time()))))
+    tkmb.showinfo('Task Finished', (f'Desired Minutes = {str(desiredMins)}, Start Seconds = {str(startSecs)}, Desired End Time = {str(desiredEndTime)}, Start Time {str(startTime)}, End Time {str(time.ctime(time.time()))}'))
     print('boxed')
 
 class macroWindow(SCWindow):
