@@ -126,9 +126,11 @@ class SCWindow:
             self.window = None
 
 
-def runIfLocal(window:SCWindow, name:str):
+def runIfLocal(window: type[SCWindow], name:str):
     if name == '__main__':
         app = window()
         app.show()
         app.periodic()
         app.window.mainloop()
+
+runIfLocal(SCWindow, __name__)

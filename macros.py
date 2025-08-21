@@ -44,7 +44,7 @@ def getInfo(chosenMacro):
 def runMacro(chosenMacro: str, key: str = None):
     desiredMins = None
     while desiredMins is None:
-        desiredMins = int(tksd.askinteger('Time Input', 'How many minutes? (under 60)', minvalue = 1, maxvalue = 59))
+        desiredMins = tksd.askinteger('Time Input', 'How many minutes? (under 60)', minvalue = 1, maxvalue = 59)
     tkmb.showinfo('Ready', 'After closing this box, press the tab key to start (also note that pressing ctrl will pause the macro and esc will end it)')
     keyboard.wait('tab')
     startSecs = time.localtime().tm_sec
