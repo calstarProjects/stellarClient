@@ -169,6 +169,11 @@ class sprite(pygame.sprite.Sprite):
         self.xVel *= 0.9
         self.yVel *= 0.9
 
+        if abs(self.xVel) < 0.05:
+            self.xVel = 0
+        if abs(self.yVel) < 0.05:
+            self.yVel = 0
+
         # Screen bounds
         if self.rect.left < 0:
             self.rect.left = 0
