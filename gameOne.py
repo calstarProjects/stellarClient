@@ -2,9 +2,6 @@
 Credit to my friend Sage for the sprite
 """
 
-# import pygame
-# from sprites import *
-
 
 def initGameOne():
     import pygame
@@ -14,6 +11,8 @@ def initGameOne():
         screen = initScreen()
     else:
         screen = getScreen()
+    
+    screen
 
     spriteList.empty()
     textSpriteList.empty()
@@ -21,18 +20,25 @@ def initGameOne():
     # Game Label
     pygame.display.set_caption("Game One")
 
-    # BG Image
-    # bgImage = pygame.image.load('')
+    bg = sprite(
+        r'util\roguelikeBG.png',
+        0,
+        0,
+        screenWidth,
+        screenHeight,
+        "background"
+    )
 
     # player sprite init
     ps = sprite(
-        'util/playerSprite.png',
+        r'util\playerSprites\frontFacingGSprite.png',
         50, 
         0, 
         200, 
         200, 
         'playerSprite', 
-        15
+        15,
+        (r"util\playerSprites\leftFacingGSprite.png", r"util\playerSprites\rightFacingGSprite.png")
     )
     psSpeedMult = 1
     psIFrames = 0
@@ -301,7 +307,6 @@ def initGameOne():
                 if ps.hitsSprite(i):
                     ps.setPos(ps.rect.centerx, ps.rect.centery + 150)
                     hitSprite = i
-                    # print (i.name)
             if hitSprite != '':
                 match hitSprite.name:
                     case 'healthUpgrade':

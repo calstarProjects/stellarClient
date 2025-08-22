@@ -56,7 +56,7 @@ spriteList = pygame.sprite.Group()
 
 # Sprite setup
 class sprite(pygame.sprite.Sprite):
-    def __init__(self, image_file: str, x: int, y: int, width: int, height: int,name: str, hp:  int = None):
+    def __init__(self, image_file: str, x: int, y: int, width: int, height: int,name: str, hp:  int = None, angledSprites: tuple = None):
         super().__init__()
 
         self.name = name
@@ -81,6 +81,32 @@ class sprite(pygame.sprite.Sprite):
         self.inverted = pygame.transform.flip(self.image, True, False)
         self.fadedImage = pygame.transform.grayscale(self.image)
         self.fadedInversion = pygame.transform.grayscale(self.inverted)
+
+        self.angledSprites = angledSprites
+        if self.angledSprites != None:
+            lSprite = self.angledSprites[0]
+            rSprite = self.angledSprites[1]
+            self.lImage = pygame.image.load(lSprite).convert_alpha()
+            self.lImage = pygame.transform.scale(
+                self.lImage, 
+                (
+                    (width), 
+                    (height)
+                )
+            )
+            self.lBaseImg = self.lImage.copy()
+            self.lFadedImage = pygame.transform.grayscale(self.lImage)
+
+            self.rImage = pygame.image.load(rSprite).convert_alpha()
+            self.rImage = pygame.transform.scale(
+                self.rImage, 
+                (
+                    (width), 
+                    (height)
+                )
+            )
+            self.rBaseImg = self.rImage.copy()
+            self.rFadedImage = pygame.transform.grayscale(self.rImage)
 
         self.xVel = 0
         self.yVel = 0
@@ -112,13 +138,30 @@ class sprite(pygame.sprite.Sprite):
     # Updating pos
     def tick(self):
         # Flip image based on screen position
-        if self.rect.centerx < screen.get_width() // 2:
-            self.image = self.fadedInversion if self.faded else self.inverted
-        else:
-            if self.faded:
-                self.image = self.fadedImage
+        if self.angledSprites == None:
+            if self.rect.centerx < screen.get_width() // 2:
+                self.image = self.fadedInversion if self.faded else self.inverted
             else:
-                self.image = pygame.transform.flip(self.inverted, True, False)
+                if self.faded:
+                    self.image = self.fadedImage
+                else:
+                    self.image = pygame.transform.flip(self.inverted, True, False)
+        else:
+            if self.xVel == 0 or abs(self.xVel) < abs(self.yVel):
+                if self.faded:
+                    self.image = self.fadedImage
+                else:
+                    self.image = self.baseImg
+            elif self.xVel < 0:
+                if self.faded:
+                    self.image = self.lFadedImage
+                else:
+                    self.image = self.lBaseImg
+            else:
+                if self.faded:
+                    self.image = self.rFadedImage
+                else:
+                    self.image = self.rBaseImg
 
         # Apply velocity
         self.rect.centerx += self.xVel
