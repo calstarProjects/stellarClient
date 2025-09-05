@@ -1,3 +1,10 @@
 .vscode/settings.json
-__pycache__/
+__pycache__/encoder.cpython-313.pyc
+__pycache__/macros.cpython-313.pyc
+__pycache__/gameOne.cpython-313.pyc
+__pycache__/gameScreen.cpython-313.pyc
+__pycache__/sprites.cpython-313.pyc
+__pycache__/keyboardScreen.cpython-313.pyc
+__pycache__/keylogger.cpython-313.pyc
 apiKey.py
+silly.py

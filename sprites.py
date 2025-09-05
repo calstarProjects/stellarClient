@@ -30,8 +30,26 @@ def initScreen():
     else:
         screenWidth, screenHeight = pyautogui.size()
 
-print (screenWidth, screenHeight)
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+    # print (screenWidth, screenHeight)
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
+
+    return screen
+
+def getScreen():
+    global screen
+    try:
+        if screen is None or pygame.display.get_surface() is None:
+            return initScreen()
+        return screen
+    except pygame.error:
+        return initScreen()
+
+try:
+    initScreen()
+except:
+    pygame.init()
+    screenWidth, screenHeight = 800, 600
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
 
 # Sprite list for ticking
 spriteList = pygame.sprite.Group()

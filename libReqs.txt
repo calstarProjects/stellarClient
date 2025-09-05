@@ -1,4 +1,4 @@
 keyboard
 pyautogui
 pygame
-google-generativeai
+PyQt5
