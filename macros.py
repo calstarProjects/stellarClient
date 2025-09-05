@@ -40,6 +40,7 @@ def getInfo(chosenMacro):
         return key
 
 def runMacro(chosenMacro: str, key: str = None):
+def runMacro(chosenMacro: str, key: str = None):
     desiredMins = None
     while desiredMins is None:
         desiredMins = int(tksd.askinteger('Time Input', 'How many minutes? (under 60)', minvalue = 1, maxvalue = 59))
@@ -52,6 +53,7 @@ def runMacro(chosenMacro: str, key: str = None):
     
     iteration = 0
     while not keyboard.is_pressed('esc'):
+    while not keyboard.is_pressed('esc'):
         if keyboard.is_pressed('ctrl'):
             tkmb.showwarning('WARNING', 'WARNING PAUSING FOR TOO LONG CAN GO PAST YOUR TIME GOAL AND RUN FOREVER \nHOLD ESC TO FORCE QUIT \npress x to continue')
             keyboard.wait('x')
@@ -60,6 +62,7 @@ def runMacro(chosenMacro: str, key: str = None):
             pyautogui.keyDown(key)
         print('start')
         while (not keyboard.is_pressed('ctrl')) and ((time.localtime().tm_sec != startSecs)) and (not keyboard.is_pressed('esc')):
+        while (not keyboard.is_pressed('ctrl')) and ((time.localtime().tm_sec != startSecs)) and (not keyboard.is_pressed('esc')):
             match chosenMacro:
                 case 'autoClick':
                     autoClick()
@@ -67,10 +70,13 @@ def runMacro(chosenMacro: str, key: str = None):
                     circle(iteration)
                 case 'autoKey':
                     autoKey(key)
+                    autoKey(key)
                 case 'holdKey':
+                    holdKey(key)
                     holdKey(key)
             iteration += 1
         if chosenMacro == 'holdKey':
+            holdKey(key, True)
             holdKey(key, True)
         print('looped')
         if ((time.localtime().tm_min == desiredEndTime) and (time.localtime().tm_sec == startSecs)):

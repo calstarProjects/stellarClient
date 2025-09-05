@@ -136,6 +136,11 @@ def initGameOne():
         screenWidth / 2,
         screenHeight / 2
     )
+    restartLabel = textSprite(
+        'YOU DIED. Run into to restart',
+        screenWidth / 2,
+        screenHeight / 2
+    )
     shopSprites.add(healthUpgrade, speedUpgrade, protectUses, exitButton)
     shopTextSprites.add(healthLabel, speedLabel, protectLabel, exitLabel)
     for i in shopSprites:
@@ -143,10 +148,12 @@ def initGameOne():
     for i in shopTextSprites:
         i.setVisible(False)
     restartLabel.setVisible(False)
+    restartLabel.setVisible(False)
     healthUpgradeCost = 2
     speedUpgradeCost = 2
     protectUsesCost = 4
     shopMode = False
+    gameEnd = False
     gameEnd = False
 
     # Loop setup
@@ -161,6 +168,9 @@ def initGameOne():
 
     # Loop
     while not exit:
+        # Get key list
+        keys = pygame.key.get_pressed()
+
         # Get key list
         keys = pygame.key.get_pressed()
 
@@ -211,6 +221,7 @@ def initGameOne():
                 protectSprite.setPos(-400, -400)
         else: 
             protectSprite.resize(0, 0)
+            protectSprite.resize(0, 0)
             protectSprite.setVisible(False)
         #Bounding 
         if abs(ps.xVel) > 25:
@@ -233,6 +244,9 @@ def initGameOne():
         currentTime = time.time()
         # Enemy movment
         if runEnemies:
+            if time.gmtime(currentTime).tm_sec % 10 == 1 and shadowBalls < 5:
+                if shadowBalls < 5:
+                    if (round(currentTime * 100) % (20 / (level + 1))) == 1:
             if time.gmtime(currentTime).tm_sec % 10 == 1 and shadowBalls < 5:
                 if shadowBalls < 5:
                     if (round(currentTime * 100) % (20 / (level + 1))) == 1:
@@ -271,6 +285,7 @@ def initGameOne():
             prevSec = currentTime
         
         # Shop start
+        if (time.gmtime(time.time()).tm_sec) == (startSec + 40) % 60 and not shopMode:
         if (time.gmtime(time.time()).tm_sec) == (startSec + 40) % 60 and not shopMode:
             runEnemies = False
             for i in shopSprites:
@@ -384,5 +399,7 @@ def initGameOne():
     screen = None
     pygame.quit()
 
+if __name__ == "__main__":
+    initGameOne()
 if __name__ == "__main__":
     initGameOne()

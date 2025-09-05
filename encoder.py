@@ -28,8 +28,12 @@ def encode(key: int = None, decrypted: str = None):
     for i in range(len(decrypted)):
         shift = int(str(key)[i % len(str(key))])
         encrypted += chr((ord(decrypted[i]) - shift) % 0x110000)
+    for i in range(len(decrypted)):
+        shift = int(str(key)[i % len(str(key))])
+        encrypted += chr((ord(decrypted[i]) - shift) % 0x110000)
 
     print(encrypted)
+    pyperclip.copy(encrypted)
     return(encrypted)
 
 def decode(key: int = None, encrypted: str = None):
@@ -40,6 +44,8 @@ def decode(key: int = None, encrypted: str = None):
     decrypted = ''
 
     for i in range(len(encrypted)):
+        shift = int(str(key)[i % len(str(key))])
+        decrypted += chr((ord(encrypted[i]) + shift) % 0x110000)
         shift = int(str(key)[i % len(str(key))])
         decrypted += chr((ord(encrypted[i]) + shift) % 0x110000)
 

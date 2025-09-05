@@ -24,6 +24,7 @@ def log(list, string):
 
 def keyLog(endKey: str):
     tkinter.messagebox.showinfo('Keylog', f'Keylogging with endkey "{endKey}"! Logs will be in keylog.txt')
+    tkinter.messagebox.showinfo('Keylog', f'Keylogging with endkey "{endKey}"! Logs will be in keylog.txt')
     keys = []
     keyStr = ''
     activeKey = ''
@@ -47,7 +48,10 @@ def keyLog(endKey: str):
             keyStr += i
     log(keys, keyStr)
     return(str(keys) + ', ' + keyStr)
+    log(keys, keyStr)
+    return(str(keys) + ', ' + keyStr)
 def keyLogPrint(endKey: str):
+    tkinter.messagebox.showinfo('Keylog Print', f'Keylogging with endkey {endKey}! Output will be in terminal')
     tkinter.messagebox.showinfo('Keylog Print', f'Keylogging with endkey {endKey}! Output will be in terminal')
     keys = []
     keyStr = ''
