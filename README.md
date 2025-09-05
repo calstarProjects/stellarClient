@@ -2,6 +2,9 @@
 
 Stellar Client is a Python Application for developers, with a bunch of tools and other apps.
 
+> [!WARNING]
+> **Disclaimer:** This project is not affiliated with, endorsed by, or sponsored by Google. It is an independent project that uses Google's Gemini Pro API.
+
 ## Installation
 
 Use the `setup.py` file and follow the instructions to initialize the project. (You need python somewhere on your machine)
