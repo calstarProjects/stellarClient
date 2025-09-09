@@ -14,7 +14,7 @@ python setup.py
 
 Run the `stellarClient.py` file to start the app
 
-```bask
+```bash
 localVenv\scripts\python.exe stellarClient.py
 ```
 
@@ -23,6 +23,8 @@ localVenv\scripts\python.exe stellarClient.py
 Pull requests are welcome, but subject to a review by  moderators. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+Also, Stellar Client is meant to be a learning repo. Please, try your best not to use ai here. If you do, please at least make sure you know how the code works. This is all a collective learning experience, and using ai goes against that ideal. Thanks!
 
 ## License
 
