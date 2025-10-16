@@ -14,7 +14,7 @@ python setup.py
 
 Run the `stellarClient.py` file to start the app
 
-```bask
+```bash
 localVenv\scripts\python.exe stellarClient.py
 ```
 
