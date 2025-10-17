@@ -119,6 +119,9 @@ class SCWindow:
 
     def periodic(self):
         self.window.after(1, self.periodic)
+    
+    def onStart(self):
+        pass
 
     def onClose(self):
         if self.window:
@@ -131,6 +134,7 @@ def runIfLocal(window: type[SCWindow], name:str):
         app = window()
         app.show()
         app.periodic()
+        app.onStart()
         app.window.mainloop()
 
 runIfLocal(SCWindow, __name__)
