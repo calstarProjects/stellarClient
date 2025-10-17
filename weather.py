@@ -1,6 +1,7 @@
 import tkinter as tk
 import requests
-
+from PIL import Image, ImageTk
+from io import BytesIO
 
 import apiKeys
 
@@ -26,6 +27,15 @@ class weatherPage(SCWindow):
             command=self.update
         )
         self.updateButton.pack(pady=(0, 10))
+
+        self.weatherImage = ImageTk.PhotoImage(self.getWeatherIcon())
+        self.weatherImageLabel = tk.Label(
+            self.weatherFrame,
+            image=self.weatherImage,
+            bg='white'
+        )
+        self.weatherImageLabel.pack(pady=(0, 10))
+        self.weatherImageLabel.image = self.weatherImage
 
         self.temperatureBox = tk.Text(
             self.weatherFrame,
@@ -68,19 +78,32 @@ class weatherPage(SCWindow):
         response = requests.get(url).json()
 
         dt = {
+            'Location': response['name'],
             'Temperature': response['main']['temp'],
             'Conditions': response['weather'][0]['description'],
             'High/Low': (str(response['main']['temp_max'])+'°', str(response['main']['temp_min'])+'°'),
-            'Wind': response['wind']
+            'Wind': response['wind'],
+            'Weather-Icon': response['weather'][0]['icon']
         }
 
         return dt
+    
+    def getWeatherIcon(self):
+        imageName = self.getWeatherInfo()['Weather-Icon']
+        url = f'https://openweathermap.org/img/wn/{imageName}@2x.png'
+        imgResponse = requests.get(url) 
+        imgResponse.raise_for_status()
+        imgBinary = imgResponse.content
+        imgDT = BytesIO(imgBinary)
+        image = Image.open(imgDT)
+        return image
 
     def update(self):
         weather = self.getWeatherInfo()
 
         self.temperatureBox.config(state='normal')
         self.temperatureBox.delete("1.0", tk.END)
+        self.temperatureBox.insert(tk.END, f"Location: {weather['Location']}\n")
         self.temperatureBox.insert(tk.END, f"Temperature: {weather['Temperature']}°\n")
         self.temperatureBox.insert(tk.END, f"Conditions: {weather['Conditions'].capitalize()}\n")
         self.temperatureBox.insert(tk.END, f"Temperature High/Low: {str(weather['High/Low']).strip('(').strip(')').replace("'", "")}\n")
