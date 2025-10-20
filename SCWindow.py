@@ -29,7 +29,7 @@ class SCWindow:
     - onClose:
         - Close function that runs when the window is closed by the user
 
-    *None of these need be called by you to run the application (except occasionally self.periodicLoop to start the periodic function if it has stopped)
+    *None of these need be called by you to run the application (except occasionally self.periodicLoop to start the periodic function if it has stopped, however this should not happen normally)
     When making a custom window, you can alter the __init__ function and the createCustomWidgets like so
     
     def __init__(self, parent=None, title='<Your Window's Name Here>', geometry="800x600", periodicRate = 1, <extra inputs>):
@@ -142,8 +142,8 @@ def runIfLocal(window: type[SCWindow], name:str):
     if name == '__main__':
         app = window()
         app.show()
-        app.periodicLoop()
         app.onStart()
+        app.periodicLoop()
         app.window.mainloop()
 
 runIfLocal(SCWindow, __name__)

@@ -12,8 +12,6 @@ class computerStatsWindow(SCWindow):
         super().__init__(parent, title, geometry, periodicRate)
 
         self.size = pyautogui.size()
-        self.timerJob = None
-        self.isRunning = None
 
     def show(self):
         if self.window is not None and self.window.winfo_exists():
@@ -46,8 +44,7 @@ class computerStatsWindow(SCWindow):
 
         self.warningLabel = tk.Label(
             contentFrame,
-            text="WARNING: This program may lag your computer, you may need to end it's task/use alt+4",
-            font=(
+            text="WARNING: This program may lag your computer, you may need to end its task/use alt+4",            font=(
                 'Castellar',
                 12,
                 'bold'
@@ -95,15 +92,13 @@ class computerStatsWindow(SCWindow):
         startTime = time.time() * 1000
         text = ''
         text += '-------Screen Stats-------\n'
-        text += f'Screen Dimentions: {self.size}\n'
-
+        text += f'Screen Dimensions: {self.size}\n'
         text += '-------CPU-------\n'
         try:
             text += f'CPU Usage: {psutil.cpu_percent(None)}\n'
             text += f'CPU Usage per CPU: {psutil.cpu_percent(None, True)}\n'
         except:
-            text += 'CPU info not avalible, '
-
+            text += 'CPU info not available, '
         text += '-------RAM-------\n'
         memoryInfo = psutil.virtual_memory()
         text += f'Total RAM: {memoryInfo.total / (1024**3):.2f} GB\n'

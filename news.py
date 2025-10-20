@@ -38,7 +38,7 @@ class newsWindow(SCWindow):
 
         result = {
             'Title': article.title,
-            'Author': article.authors if article.authors != [] else 'No authors detected',
+            'Author': ', '.join(article.authors) if article.authors else 'No authors detected',
             'Date': article.publish_date,
             'Text': article.text
         }

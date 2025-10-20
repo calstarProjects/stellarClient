@@ -1,17 +1,16 @@
 """Encoding Function for the Stellar Client app
 Basic key based encryption, uses tkinter to get input for the key and string
 
-Returns a print statment and the encrypted/decrypted value
+Returns a print statement and the encrypted/decrypted value
 
 # Args:
     ##  Optional:
     ### - key -- The value that is used for encryption and decryption
-    ### - encrypted/decrypted -- The acutal string to be modified
+    ### - encrypted/decrypted -- The actual string to be modified
 
 # Returns:
     ### - Encrypted/Decrypted
 """
-
 import tkinter as tk
 import tkinter.messagebox as tkmb
 import tkinter.simpledialog as tksd
