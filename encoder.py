@@ -164,7 +164,6 @@ class encodingWindow(SCWindow):
 
     def periodic(self):
         self.keyInput.tag_add("centre", "1.0", tk.END)
-        self.window.after(1, self.periodic)
 
     def encodeInputs(self):
         text = self.textInput.get('1.0', tk.END).strip()

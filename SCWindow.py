@@ -21,16 +21,19 @@ class SCWindow:
     
     - periodic:
         - Periodic function called repeatedly
-        - NOTE: Make sure to call super.periodic() within your customized periodic function to maintain a loop
+        - In initialization, you can set the loop rate in ms
+
+    - onStart:
+        - Start function that runs when the window is initalised
 
     - onClose:
         - Close function that runs when the window is closed by the user
 
-    *None of these need be called by you to run the application except self.show() and self.window.mainloop() (or occasionally self.periodic to start the periodic function)
+    *None of these need be called by you to run the application (except occasionally self.periodicLoop to start the periodic function if it has stopped)
     When making a custom window, you can alter the __init__ function and the createCustomWidgets like so
     
-    def __init__(self, parent=None, title='<Your Window's Name Here>', geometry="800x600", <extra inputs>):
-        super().__init__(parent, title, geometry)
+    def __init__(self, parent=None, title='<Your Window's Name Here>', geometry="800x600", periodicRate = 1, <extra inputs>):
+        super().__init__(parent, title, geometry, periodicRate)
 
         self.<extra traits> = <extra inputs>
         
@@ -47,11 +50,13 @@ class SCWindow:
         extraHeader.pack(expand=True)
     """
 
-    def __init__(self, parent = None, title = 'Stellar Client', geometry = "800x600"):
+    def __init__(self, parent = None, title = 'Stellar Client', geometry = "800x600", periodicRate = 1):
         self.parent = parent
         self.window = None
         self.title = title
         self.geometry = geometry
+        self.periodicRate = periodicRate
+
 
     def show(self):
         if self.window is not None and self.window.winfo_exists():
@@ -118,7 +123,11 @@ class SCWindow:
         pass
 
     def periodic(self):
-        self.window.after(1, self.periodic)
+        pass
+
+    def periodicLoop(self):
+        self.window.after(self.periodicRate, self.periodic)
+        self.window.after(self.periodicRate, self.periodicLoop)
     
     def onStart(self):
         pass
@@ -133,7 +142,7 @@ def runIfLocal(window: type[SCWindow], name:str):
     if name == '__main__':
         app = window()
         app.show()
-        app.periodic()
+        app.periodicLoop()
         app.onStart()
         app.window.mainloop()
 
