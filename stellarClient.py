@@ -12,6 +12,7 @@ In Progress:
 
 - Messaging
 - More Games
+- News
 """
 
 
