@@ -7,7 +7,7 @@ import apiKeys
 
 from SCWindow import SCWindow, runIfLocal
 
-class weatherPage(SCWindow):
+class weatherWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Weather', geometry="800x600"):
         super().__init__(parent, title, geometry)
     
@@ -114,4 +114,4 @@ class weatherPage(SCWindow):
         self.update() # TODO: make threaded maybe, need discussion
 
 
-runIfLocal(weatherPage, __name__)
+runIfLocal(weatherWindow, __name__)

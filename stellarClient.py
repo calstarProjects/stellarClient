@@ -21,6 +21,7 @@ from keyboardScreen import keyboardWindow
 from encoder import encodingWindow
 from gameScreen import gameScreen
 from SCWindow import SCWindow, runIfLocal
+from worldInfo import worldInfo
 import tkinter as tk
 
 screenwidth, screenlength = pyautogui.size()
@@ -34,7 +35,7 @@ class stellarClientWindow(SCWindow):
 
         self.keyboardWindow = None
         self.gamesWindow = None
-        self.WIPWindow = None
+        self.worldNewsWindow = None
     
     def createCustomWidgets(self, mainFrame):
         contentFrame= tk.Frame(mainFrame, bg='grey')
@@ -68,14 +69,14 @@ class stellarClientWindow(SCWindow):
 
         self.WIPButton = tk.Button(
             contentFrame,
-            text='WIP',
+            text='World Info',
             font=(
                 'Castellar',
                 14
             ),
             bg='light grey',
             fg='black',
-            command=self.wip
+            command=self.worldInfo
         )
         self.WIPButton.pack(padx=10, pady=10, side='left', fill='both', expand=False)
     
@@ -89,9 +90,9 @@ class stellarClientWindow(SCWindow):
             self.gamesWindow = gameScreen(self.window)
         self.gamesWindow.show()
 
-    def wip(self):
-        if self.WIPButton == None:
-            pass # self.keyboardWindow = keyboardWindow(self.window)
-        # self.keyboardWindow.show()
+    def worldInfo(self):
+        if self.worldNewsWindow == None:
+            self.worldNewsWindow = worldInfo(self.window) 
+        self.worldNewsWindow.show()
 
 runIfLocal(stellarClientWindow, __name__)
