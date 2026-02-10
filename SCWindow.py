@@ -57,12 +57,16 @@ class SCWindow:
         self.geometry = geometry
         self.periodicRate = periodicRate
 
+    def __str__(self):
+        return self.title
+    
+    def __repr__(self):
+        return f"SCWindow(title={self.title}, windowAttributes={self.window.attributes}"
 
     def show(self):
         if self.window is not None and self.window.winfo_exists():
             self.window.lift()
             return
-
         self.createWindow()
     
     def createWindow(self):
@@ -140,10 +144,17 @@ class SCWindow:
 
 def runIfLocal(window: type[SCWindow], name:str):
     if name == '__main__':
-        app = window()
-        app.show()
-        app.onStart()
-        app.periodicLoop()
-        app.window.mainloop()
+        try:
+            app = window()
+            app.show()
+            print(repr(app))
+            app.onStart()
+            app.periodicLoop()
+            app.window.mainloop()
+            print("Ended Successfully!")
+        except Exception as e:
+            app.onClose()
+            print("Loop Error: " + e)
+
 
 runIfLocal(SCWindow, __name__)
