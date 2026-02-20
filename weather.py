@@ -8,7 +8,7 @@ import apiKeys
 from SCWindow import SCWindow, runIfLocal
 
 class weatherWindow(SCWindow):
-    def __init__(self, parent=None, title='Stellar Client Weather', geometry="800x600"):
+    def __init__(self, parent=None, title='Stellar Client Weather', geometry="1000x600"):
         super().__init__(parent, title, geometry)
     
     def createCustomWidgets(self, mainFrame):
@@ -107,7 +107,8 @@ class weatherWindow(SCWindow):
         self.temperatureBox.insert(tk.END, f"Temperature: {weather['Temperature']}°\n")
         self.temperatureBox.insert(tk.END, f"Conditions: {weather['Conditions'].capitalize()}\n")
         self.temperatureBox.insert(tk.END, f"Temperature High/Low: {str(weather['High/Low']).strip('(').strip(')').replace("'", "")}\n")
-        self.temperatureBox.insert(tk.END, f"Wind: {str(weather['Wind']).strip('{').strip('}').replace("'", "")} (Speeds in KM/H)\n")
+        self.temperatureBox.insert(tk.END, f"Wind: Speed: {weather['Wind']['speed']}, Degrees: {weather['Wind']['deg']}°, Gust: {weather['Wind']['gust']} (Speeds in KM/H)\n")
+                                                    #).strip('{').strip('}').replace("'", "")} (Speeds in KM/H)\n"
         self.temperatureBox.config(state='disabled')
     
     def onStart(self):
