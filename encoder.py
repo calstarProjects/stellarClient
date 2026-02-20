@@ -91,7 +91,7 @@ class encodingWindow(SCWindow):
             fg='black',
             height=2
         )
-        self.textInput.pack(padx=int(self.geometry[0:3])/6, pady=(10, 0))
+        self.textInput.pack(padx=int((self.geometry.split("x")[0]))/6, pady=(10, 0))
 
         keyLabel = tk.Label(
             contentFrame,
@@ -118,7 +118,7 @@ class encodingWindow(SCWindow):
 
         )
         self.keyInput.tag_configure("centre", justify='center')
-        self.keyInput.pack(padx=int(self.geometry[0:3])/6, pady=(10, 10))
+        self.keyInput.pack(padx=int(self.geometry.split("x")[0])/6, pady=(10, 10))
 
         buttonFrame = tk.Frame(contentFrame)
         buttonFrame.pack(fill=('y'), pady=(0, 10))
@@ -159,7 +159,7 @@ class encodingWindow(SCWindow):
             fg='black',
             height=2,
         )
-        self.output.pack(padx=int(self.geometry[0:3])/6, pady=(10, 10), expand=False)
+        self.output.pack(padx=int(self.geometry.split("x")[0])/6, pady=(10, 10), expand=False)
         self.output.config(state='disabled')
 
     def periodic(self):

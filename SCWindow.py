@@ -61,7 +61,7 @@ class SCWindow:
         return self.title
     
     def __repr__(self):
-        return f"SCWindow(title={self.title}, windowAttributes={self.window.attributes}"
+        return f"SCWindow(title={self.title}, windowAttributes={self.window.attributes() if self.window else None})"
 
     def show(self):
         if self.window is not None and self.window.winfo_exists():
@@ -144,6 +144,7 @@ class SCWindow:
 
 def runIfLocal(window: type[SCWindow], name:str):
     if name == '__main__':
+        app = None
         try:
             app = window()
             app.show()
@@ -153,8 +154,8 @@ def runIfLocal(window: type[SCWindow], name:str):
             app.window.mainloop()
             print("Ended Successfully!")
         except Exception as e:
-            app.onClose()
-            print("Loop Error: " + e)
-
+            if app is not None:
+                app.onClose()
+            print(f"Loop Error: {e}")
 
 runIfLocal(SCWindow, __name__)

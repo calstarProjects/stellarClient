@@ -107,8 +107,14 @@ class weatherWindow(SCWindow):
         self.temperatureBox.insert(tk.END, f"Temperature: {weather['Temperature']}°\n")
         self.temperatureBox.insert(tk.END, f"Conditions: {weather['Conditions'].capitalize()}\n")
         self.temperatureBox.insert(tk.END, f"Temperature High/Low: {str(weather['High/Low']).strip('(').strip(')').replace("'", "")}\n")
-        self.temperatureBox.insert(tk.END, f"Wind: Speed: {weather['Wind']['speed']}, Degrees: {weather['Wind']['deg']}°, Gust: {weather['Wind']['gust']} (Speeds in KM/H)\n")
-                                                    #).strip('{').strip('}').replace("'", "")} (Speeds in KM/H)\n"
+        wind = weather['Wind']
+        speed = wind.get('speed', 'N/A')
+        deg = wind.get('deg', 'N/A')
+        gust = wind.get('gust', None)
+        speed_str = f"{speed} m/s" if speed != 'N/A' else 'N/A'
+        deg_str = f"{deg}°" if deg != 'N/A' else 'N/A'
+        gust_str = f"{gust} m/s" if gust is not None else 'N/A'
+        self.temperatureBox.insert(tk.END, f"Wind: Speed: {speed_str}, Degrees: {deg_str}, Gust: {gust_str}\n")
         self.temperatureBox.config(state='disabled')
     
     def onStart(self):
