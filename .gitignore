@@ -1,5 +1,5 @@
 .vscode/settings.json
-apiKeys.py
+apiKeys.env
 silly.py
 chatHistory.txt
 /__pycache__

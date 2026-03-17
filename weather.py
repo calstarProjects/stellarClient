@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 import requests
 from PIL import Image, ImageTk
@@ -69,11 +70,13 @@ class weatherWindow(SCWindow):
     def getWeatherInfo(self): #TODO: Theres a lot of risks here, work on later
         location = self.getLocationInfo()
 
-        geoUrl = f"http://api.openweathermap.org/geo/1.0/direct?q={location['City'].strip().replace(' ', '-')},{location['State_Code'].strip().replace(' ', '-')},{location['Country_Code'].strip().replace(' ', '-')}&appid={apiKeys.WEATHERKEY}"
+        WEATHER_KEY = os.environ.get("WEATHER_KEY")
+
+        geoUrl = f"http://api.openweathermap.org/geo/1.0/direct?q={location['City'].strip().replace(' ', '-')},{location['State_Code'].strip().replace(' ', '-')},{location['Country_Code'].strip().replace(' ', '-')}&appid={WEATHER_KEY}"
 
         latLon = requests.get(geoUrl).json()
 
-        url = f"https://api.openweathermap.org/data/2.5/weather?lat={latLon[0]['lat']}&lon={latLon[0]['lon']}&appid={apiKeys.WEATHERKEY}&units=metric"
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={latLon[0]['lat']}&lon={latLon[0]['lon']}&appid={WEATHER_KEY}&units=metric"
 
         response = requests.get(url).json()
 
