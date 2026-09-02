@@ -156,6 +156,6 @@ def runIfLocal(window: type[SCWindow], name:str):
         except Exception as e:
             if app is not None:
                 app.onClose()
-            print(f"Loop Error: {e}")
+            print(f"Loop Error: {e.__class__.__name__}: {e}")
 
 runIfLocal(SCWindow, __name__)

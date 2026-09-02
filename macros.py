@@ -9,7 +9,7 @@ import tkinter as tk
 from SCWindow import SCWindow, runIfLocal
 
 def circle(itr: int):
-    pyautogui.move(math.cos(itr/3)*50, math.sin(itr/3)*50)
+    pyautogui.move(math.cos(itr/3)*100, math.sin(itr/3)*100)
 def autoClick():
     pyautogui.click()
 def autoKey(key: str):
@@ -74,7 +74,7 @@ def runMacro(chosenMacro: str, key: str = None):
             iteration += 1
         if chosenMacro == 'holdKey':
             holdKey(key, True)
-        print('looped')
+        # print('looped')
         if ((time.localtime().tm_min == desiredEndTime) and (time.localtime().tm_sec == startSecs)):
             print('should be done')
             break

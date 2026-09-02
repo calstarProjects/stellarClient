@@ -3,8 +3,7 @@ import tkinter as tk
 import requests
 from PIL import Image, ImageTk
 from io import BytesIO
-
-import apiKeys
+from dotenv import load_dotenv
 
 from SCWindow import SCWindow, runIfLocal
 
@@ -70,15 +69,24 @@ class weatherWindow(SCWindow):
     def getWeatherInfo(self): #TODO: Theres a lot of risks here, work on later
         location = self.getLocationInfo()
 
-        WEATHER_KEY = os.environ.get("WEATHER_KEY")
+        load_dotenv()
+
+        WEATHER_KEY = os.getenv("WEATHER_KEY")
+
+        if WEATHER_KEY == None:
+            raise LookupError("Weather key is None")
 
         geoUrl = f"http://api.openweathermap.org/geo/1.0/direct?q={location['City'].strip().replace(' ', '-')},{location['State_Code'].strip().replace(' ', '-')},{location['Country_Code'].strip().replace(' ', '-')}&appid={WEATHER_KEY}"
 
         latLon = requests.get(geoUrl).json()
+        if latLon == None:
+            raise ValueError("Latitude-Longitude get call is None")
 
         url = f"https://api.openweathermap.org/data/2.5/weather?lat={latLon[0]['lat']}&lon={latLon[0]['lon']}&appid={WEATHER_KEY}&units=metric"
 
         response = requests.get(url).json()
+        if response == None:
+            raise ValueError("Weather get call is None")
 
         dt = {
             'Location': response['name'],
@@ -95,6 +103,8 @@ class weatherWindow(SCWindow):
         imageName = self.getWeatherInfo()['Weather-Icon']
         url = f'https://openweathermap.org/img/wn/{imageName}@2x.png'
         imgResponse = requests.get(url) 
+        if imgResponse == None:
+            raise ValueError("Icon get call is None")
         imgResponse.raise_for_status()
         imgBinary = imgResponse.content
         imgDT = BytesIO(imgBinary)
@@ -102,12 +112,17 @@ class weatherWindow(SCWindow):
         return image
 
     def update(self):
-        weather = self.getWeatherInfo()
+        try:
+            weather = self.getWeatherInfo()
+        except Exception as e:
+            self.temperatureBox.config(state="normal")
+            self.temperatureBox.delete("1.0", tk.END)
+            self.temperatureBox.insert(tk.END, f"Error in weather fetching: {e}")
 
         self.temperatureBox.config(state='normal')
         self.temperatureBox.delete("1.0", tk.END)
         self.temperatureBox.insert(tk.END, f"Location: {weather['Location']}\n")
-        self.temperatureBox.insert(tk.END, f"Temperature: {weather['Temperature']}°\n")
+        self.temperatureBox.insert(tk.END, f"Temperature: {weather['Temperature']}°C\n")
         self.temperatureBox.insert(tk.END, f"Conditions: {weather['Conditions'].capitalize()}\n")
         self.temperatureBox.insert(tk.END, f"Temperature High/Low: {str(weather['High/Low']).strip('(').strip(')').replace("'", "")}\n")
         wind = weather['Wind']
