@@ -27,9 +27,11 @@ jobs:
 
       - name: Build app with PyInstaller
         run: |
-          pyinstaller --onefile --windowed stellarClient.py --add-data=keyboardScreen.py:. --add-data=gameScreen.py:.
+          pyinstaller --onefile --windowed stellarClient.py `
+            --add-data=keyboardScreen.py;. `
+            --add-data=gameScreen.py;.
           mkdir dist-artifacts
-          cp -r dist/* dist-artifacts/
+          Copy-Item -r dist/* dist-artifacts/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
