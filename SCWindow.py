@@ -1,37 +1,72 @@
 import tkinter as tk
 
-"""Encoding Function for the Stellar Client app
-Basic key based encryption, uses tkinter to get input for the key and string
-
-Returns a print statment and the encrypted/decrypted value
-
-# Args:
-    ##  Optional:
-    ### - key -- The value that is used for encryption and decryption
-    ### - encrypted/decrypted -- The acutal string to be modified
-
-# Returns:
-    ### - Encrypted/Decrypted
-"""
-
-import tkinter as tk
-
 class SCWindow:
-    def __init__(self, parent = None, title = 'Stellar Client', geometry = "800x600"):
+    """The base Stellar Client Window Object/Class
+    Functions*:
+
+    - __init__:
+        - Initialize function
+
+    - show:
+        - Makes the window create/lift itself
+    
+    - createWindow: 
+        - Makes the self.window object
+    
+    - createWidgets:
+        - Makes basic Stellar Client Header
+
+    - createCustomWidgets:
+        - Customizable extra tk window objects
+    
+    - periodic:
+        - Periodic function called repeatedly
+        - In initialization, you can set the loop rate in ms
+
+    - onStart:
+        - Start function that runs when the window is initalised
+
+    - onClose:
+        - Close function that runs when the window is closed by the user
+
+    *None of these need be called by you to run the application (except occasionally self.periodicLoop to start the periodic function if it has stopped, however this should not happen normally)
+    When making a custom window, you can alter the __init__ function and the createCustomWidgets like so
+    
+    def __init__(self, parent=None, title='<Your Window's Name Here>', geometry="800x600", periodicRate = 1, <extra inputs>):
+        super().__init__(parent, title, geometry, periodicRate)
+
+        self.<extra traits> = <extra inputs>
+        
+    def createCustomWidgets(self, mainFrame):
+        extraHeaderFrame = tk.Frame(mainFrame, bg='white')
+        extraHeaderFrame.pack(fill='x', pady=(0, 10))
+
+        extraHeader = tk.Label(
+            extraHeaderFrame,
+            text='EXTRA',
+            bg='white',
+            fg='black'
+        )
+        extraHeader.pack(expand=True)
+    """
+
+    def __init__(self, parent = None, title = 'Stellar Client', geometry = "800x600", periodicRate = 1):
         self.parent = parent
         self.window = None
         self.title = title
         self.geometry = geometry
-        self.__post_init__()
+        self.periodicRate = periodicRate
 
-    def __post_init__(self):
-        pass
+    def __str__(self):
+        return self.title
+    
+    def __repr__(self):
+        return f"SCWindow(title={self.title}, windowAttributes={self.window.attributes() if self.window else None})"
 
     def show(self):
         if self.window is not None and self.window.winfo_exists():
             self.window.lift()
             return
-
         self.createWindow()
     
     def createWindow(self):
@@ -92,7 +127,14 @@ class SCWindow:
         pass
 
     def periodic(self):
-        self.window.after(1, self.periodic)
+        pass
+
+    def periodicLoop(self):
+        self.window.after(self.periodicRate, self.periodic)
+        self.window.after(self.periodicRate, self.periodicLoop)
+    
+    def onStart(self):
+        pass
 
     def onClose(self):
         if self.window:
@@ -100,9 +142,20 @@ class SCWindow:
             self.window = None
 
 
-def runIfLocal(window:SCWindow, name:str):
+def runIfLocal(window: type[SCWindow], name:str):
     if name == '__main__':
-        app = window()
-        app.show()
-        app.periodic()
-        app.window.mainloop()
+        app = None
+        try:
+            app = window()
+            app.show()
+            print(repr(app))
+            app.onStart()
+            app.periodicLoop()
+            app.window.mainloop()
+            print("Ended Successfully!")
+        except Exception as e:
+            if app is not None:
+                app.onClose()
+            print(f"Loop Error: {e.__class__.__name__}: {e}")
+
+runIfLocal(SCWindow, __name__)
