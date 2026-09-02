@@ -1,6 +1,9 @@
 from macros import macroWindow
 from encoder import encodingWindow
 from computerStats import computerStatsWindow
+from macros import macroWindow
+from encoder import encodingWindow
+from computerStats import computerStatsWindow
 from keylogger import keyLog
 from sorts import sortingPage
 from SCWindow import SCWindow, runIfLocal

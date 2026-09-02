@@ -1,5 +1,6 @@
 """A stupid bullet hell game by Calstar9000 using Pokemon Sprites
 Credit to my friend Sage for the sprite
+Credit to my friend Sage for the sprite
 """
 
 
@@ -45,6 +46,11 @@ def initGameOne():
     psProtectUses = 0
     psProtectUsesMax = 0
     psCoins = 0
+    psSpeedMult = 1
+    psIFrames = 0
+    psProtectUses = 0
+    psProtectUsesMax = 0
+    psCoins = 0
 
     # Protect setup
     protectSprite = sprite(
@@ -69,8 +75,16 @@ def initGameOne():
             protectSound.set_volume(0.1)
         except:
             print('Weird error with music thats not the mixer????')
+    except:
+        try:
+            pygame.mixer.init()
+            protectSound = pygame.mixer.Sound(r'util\explosion.wav')
+            protectSound.set_volume(0.1)
+        except:
+            print('Weird error with music thats not the mixer????')
 
     # Text init
+    psLabel = textSprite("Yo, its ps, and im here to fight ya cuz you're in my house", 0, 0)
     psLabel = textSprite("Yo, its ps, and im here to fight ya cuz you're in my house", 0, 0)
 
     # Enemy setup
@@ -185,17 +199,30 @@ def initGameOne():
             exit = True
 
         # player sprite movment
+        # player sprite movment
         if keys[pygame.K_UP]:
+            ps.applyForce(0, -5 * psSpeedMult)
             ps.applyForce(0, -5 * psSpeedMult)
         if keys[pygame.K_DOWN]:
             ps.applyForce(0, 5 * psSpeedMult)
+            ps.applyForce(0, 5 * psSpeedMult)
         if keys[pygame.K_LEFT]:
             ps.applyForce(-5 * psSpeedMult, 0)
+            ps.applyForce(-5 * psSpeedMult, 0)
         if keys[pygame.K_RIGHT]:
+            ps.applyForce(5 * psSpeedMult, 0)
             ps.applyForce(5 * psSpeedMult, 0)
     
         # Protect
         if keys[pygame.K_SPACE] and not protecting:
+            # print('protecting start: ', protecting)
+            if psProtectUses > 0:
+                psLabel.relabel('No Protect Uses')
+                psProtectUses -= 1
+                protectSprite.setVisible(True)
+                protecting = True
+                protectSound.play(0)
+
             # print('protecting start: ', protecting)
             if psProtectUses > 0:
                 psLabel.relabel('No Protect Uses')
@@ -210,6 +237,7 @@ def initGameOne():
                 protectingItr += 1
                 protectSprite.resize(protectingItr * 1.3 + 283, protectingItr * 1.3 + 283)
                 protectSprite.setPos(ps.rect.centerx, ps.rect.centery)
+                protectSprite.setPos(ps.rect.centerx, ps.rect.centery)
                 protectSprite.update()
             else:
                 protectingItr = 0
@@ -223,8 +251,13 @@ def initGameOne():
             ps.xVel *= 0.8
         if abs(ps.yVel) > 25:
             ps.yVel *= 0.8
+        if abs(ps.xVel) > 25:
+            ps.xVel *= 0.8
+        if abs(ps.yVel) > 25:
+            ps.yVel *= 0.8
 
         # Label movment
+        psLabel.setPos(ps.rect.right, ps.rect.top)
         psLabel.setPos(ps.rect.right, ps.rect.top)
 
         # Sprite and screen updates
@@ -259,8 +292,14 @@ def initGameOne():
                 angleTo = math.atan2(
                     ps.rect.centery-i.rect.centery, 
                     ps.rect.centerx-i.rect.centerx
+                    ps.rect.centery-i.rect.centery, 
+                    ps.rect.centerx-i.rect.centerx
                 ) * mod
                 i.applyForce(math.cos(angleTo) * enemySpeed, math.sin(angleTo) * enemySpeed)
+                if ps.hitsSprite(i) and not psIFrames > 0:
+                    ps.hp -= 1.5 ** level
+                    psIFrames = 100
+                    psLabel.relabel('HP: ' + str(ps.hp) + '/' + str(ps.maxHp))
                 if ps.hitsSprite(i) and not psIFrames > 0:
                     ps.hp -= 1.5 ** level
                     psIFrames = 100
@@ -269,9 +308,12 @@ def initGameOne():
                 if protectSprite.hitsSprite(i):
                     i.applyForce(-math.cos(angleTo) * 100, -math.sin(angleTo) * 100)
         if psIFrames > 0:
+        if psIFrames > 0:
             if round(currentTime * 2) / 2 == round(prevSec * 2) / 2 + 0.5:
                 ps.faded = not ps.faded
+                ps.faded = not ps.faded
         else:
+            ps.faded = False
             ps.faded = False
         if round(currentTime * 2) / 2 == round(prevSec * 2) / 2 + 0.5:
             prevSec = currentTime
@@ -293,6 +335,12 @@ def initGameOne():
             ps.setPos(screenWidth / 2, (screenHeight / 4) * 3)
             ps.xVel = 0
             ps.yVel = 0
+            psCoins += ps.hp
+            realSpeedMult = psSpeedMult
+            psSpeedMult = 1
+            ps.setPos(screenWidth / 2, (screenHeight / 4) * 3)
+            ps.xVel = 0
+            ps.yVel = 0
             shopMode = True    
 
         # During shop updates
@@ -306,6 +354,8 @@ def initGameOne():
             for i in shopSprites:
                 if ps.hitsSprite(i):
                     ps.setPos(ps.rect.centerx, ps.rect.centery + 150)
+                if ps.hitsSprite(i):
+                    ps.setPos(ps.rect.centerx, ps.rect.centery + 150)
                     hitSprite = i
             if hitSprite != '':
                 match hitSprite.name:
@@ -313,12 +363,20 @@ def initGameOne():
                         if healthUpgradeCost <= psCoins:
                             psCoins -= healthUpgradeCost
                             psLabel.relabel(('Bought Health Upgrade for ' + str(healthUpgradeCost)))
+                        if healthUpgradeCost <= psCoins:
+                            psCoins -= healthUpgradeCost
+                            psLabel.relabel(('Bought Health Upgrade for ' + str(healthUpgradeCost)))
                             healthUpgradeCost = round(healthUpgradeCost * 1.5)
                             healthLabel.relabel('Hit to gain health upgrade, Cost:' + str(healthUpgradeCost))
                             ps.maxHp += 1
+                            ps.maxHp += 1
                         else:
                             psLabel.relabel('ERR: Too expensive')
+                            psLabel.relabel('ERR: Too expensive')
                     case 'speedUpgrade':
+                        if speedUpgradeCost <= psCoins:
+                            psLabel.relabel(('Bought Speed Upgrade for ' +  str(speedUpgradeCost)))
+                            psCoins -= speedUpgradeCost
                         if speedUpgradeCost <= psCoins:
                             psLabel.relabel(('Bought Speed Upgrade for ' +  str(speedUpgradeCost)))
                             psCoins -= speedUpgradeCost
@@ -327,14 +385,20 @@ def initGameOne():
                             realSpeedMult += speedUpgradeCost/20
                         else:
                             psLabel.relabel('ERR: Too expensive')
+                            psLabel.relabel('ERR: Too expensive')
                     case 'protectUse':
+                        if protectUsesCost <= psCoins:
+                            psLabel.relabel(('Bought Protect Use for ' + str(protectUsesCost)))
+                            psCoins -= protectUsesCost
                         if protectUsesCost <= psCoins:
                             psLabel.relabel(('Bought Protect Use for ' + str(protectUsesCost)))
                             psCoins -= protectUsesCost
                             protectUsesCost = round(protectUsesCost * 1.5)
                             protectLabel.relabel('Hit to gain protect uses, Cost:' + str(protectUsesCost))
                             psProtectUsesMax += 1
+                            psProtectUsesMax += 1
                         else:
+                            psLabel.relabel('ERR: Too expensive')
                             psLabel.relabel('ERR: Too expensive')
                     case 'exit':
                         for i in shopSprites:
@@ -343,12 +407,18 @@ def initGameOne():
                             i.setVisible(False)
                         ps.hp = ps.maxHp
                         psProtectUses = psProtectUsesMax
+                        ps.hp = ps.maxHp
+                        psProtectUses = psProtectUsesMax
                         shopMode = False
                         runEnemies = True
+                        psSpeedMult = realSpeedMult
                         psSpeedMult = realSpeedMult
                         startSec = time.gmtime(time.time()).tm_sec
                         level += 1
                         enemySpeed = 1 + (0.5 * level)
+        if ps.hp <= 0:
+            ps.hp = 0.1
+            ps.setPos(screenWidth / 2, (screenHeight / 4) * 3)
         if ps.hp <= 0:
             ps.hp = 0.1
             ps.setPos(screenWidth / 2, (screenHeight / 4) * 3)
@@ -360,7 +430,15 @@ def initGameOne():
         
         if gameEnd:
             if ps.hitsSprite(restartLabel):
+            if ps.hitsSprite(restartLabel):
                 enemySpeed = 1
+                ps.maxHp = 15
+                ps.hp = ps.maxHp
+                psSpeedMult = 1
+                psIFrames = 0
+                psProtectUses = 0
+                psProtectUsesMax = 0
+                psCoins = 0
                 ps.maxHp = 15
                 ps.hp = ps.maxHp
                 psSpeedMult = 1
@@ -382,10 +460,13 @@ def initGameOne():
                 restartLabel.setVisible(False)
         
         coinsLabel.relabel('Coins: ' + str(psCoins))
+        coinsLabel.relabel('Coins: ' + str(psCoins))
         coinsLabel.rect.topright = (screenWidth, 0)
+        psIFrames -= 1
         psIFrames -= 1
         if not gameEnd:
             enemySpeed += 0.001
+    screen = None
     screen = None
     pygame.quit()
 

@@ -20,7 +20,9 @@ from SCWindow import SCWindow, runIfLocal
 def encode(key: int = None, decrypted: str = None):    
     while key == None:
         key = tksd.askinteger('Encryption Key', 'Please input your encryption key')
+        key = tksd.askinteger('Encryption Key', 'Please input your encryption key')
     while decrypted == None:
+        decrypted = tksd.askstring('Encryption String', 'Please input the string to encode')
         decrypted = tksd.askstring('Encryption String', 'Please input the string to encode')
     encrypted = ''
 
@@ -34,7 +36,9 @@ def encode(key: int = None, decrypted: str = None):
 def decode(key: int = None, encrypted: str = None):
     while key == None:
         key = tksd.askinteger('Decryption Key', 'Please input your decryption key')
+        key = tksd.askinteger('Decryption Key', 'Please input your decryption key')
     while encrypted == None:
+        encrypted = tksd.askstring('Decryption String', 'Please input the string to decode')
         encrypted = tksd.askstring('Decryption String', 'Please input the string to decode')
     decrypted = ''
 

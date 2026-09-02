@@ -1,8 +1,11 @@
 # import keyboard
+# import keyboard
 import pyautogui
 import time
 import psutil
 import datetime
+import tkinter as tk
+from SCWindow import SCWindow, runIfLocal
 import tkinter as tk
 from SCWindow import SCWindow, runIfLocal
 
@@ -86,6 +89,9 @@ class computerStatsWindow(SCWindow):
         # instructions.pack(pady=(10, 0))
         
     def periodic(self):
+        if not self.isRunning or not self.window or not self.window.winfo_exists():
+            return
+        
         if not self.isRunning or not self.window or not self.window.winfo_exists():
             return
         

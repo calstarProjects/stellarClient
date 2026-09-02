@@ -24,9 +24,11 @@ Pull requests are welcome, but subject to a review by  moderators. For major cha
 
 Please make sure to update tests as appropriate.
 
+Also, Stellar Client is meant to be a learning repo. Please, try your best not to use ai here. If you do, please at least make sure you know how the code works. This is all a collective learning experience, and using ai goes against that ideal. Thanks!
+
 ## License
 
-[GPL 3.0](https://choosealicense.com/licenses/gpl-3.0/), see `LICENSE` file for more
+[MIT License](https://choosealicense.com/licenses/mit/), see `LICENSE` file for more
 
 ## Notes
 All information should be refrenced from the MAIN BRANCH `README.md`
