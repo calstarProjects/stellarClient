@@ -1,14 +1,13 @@
-import pyautogui
-import threading
+from SCWindow import SCWindow, runIfLocal
+from weather import weatherWindow
+from news import newsWindow
 import tkinter as tk
 
-from SCWindow import SCWindow, runIfLocal
-
-screenwidth, screenlength = pyautogui.size()
-
-class gameScreen(SCWindow):
-    def __init__(self, parent = None, title = 'Stellar Client Games', geometry = '800x600'):
+class worldInfo(SCWindow):
+    def __init__(self, parent = None, title = 'Stellar Client Games', geometry = '800x400'):
         super().__init__(parent, title, geometry)
+        self.weatherWindow = None
+        self.newsWindow = None
     
     def createCustomWidgets(self, mainFrame):
         gamesHeaderFrame = tk.Frame(mainFrame, bg='white')
@@ -16,7 +15,7 @@ class gameScreen(SCWindow):
 
         gamesHeader = tk.Label(
             gamesHeaderFrame,
-            text='Games',
+            text='World Info',
             font=(
                 'Castellar',
                 16,
@@ -32,7 +31,7 @@ class gameScreen(SCWindow):
 
         gameOneButton = tk.Button(
             gamesFrame,
-            text='Bullet Hell Roguelike',
+            text='Weather',
             font=(
                 'Castellar',
                 16
@@ -41,13 +40,13 @@ class gameScreen(SCWindow):
             fg='white',
             width=15,  # int(self.geometry[0:3])//3
             height=2,
-            command=self.gameOne
+            command=self.weather
         )
         gameOneButton.pack(side='left', fill='both', padx=(0, 5), expand=False)
 
         gameTwoButton = tk.Button(
             gamesFrame,
-            text='Game Two',  # TODO: Update with actual game name
+            text='News',  # TODO: Update with actual game name
             font=(
                 'Castellar',
                 16
@@ -56,12 +55,18 @@ class gameScreen(SCWindow):
             fg='white',
             width=15, # int(self.geometry[0:3])//3
             height=2,
-            command= lambda: print("Not implemented yet")
+            command= self.news
         )
         gameTwoButton.pack(side='left', fill='both', padx=(5, 0), expand=False)    
 
-    def gameOne(self):
-        from gameOne import initGameOne
-        initGameOne()        
+    def weather(self):
+        if self.weatherWindow == None:
+            self.weatherWindow = weatherWindow(self.window)
+        self.weatherWindow.show()
+        
+    def news(self):
+        if self.newsWindow == None:
+            self.newsWindow = newsWindow(self.window)
+        self.newsWindow.show()              
 
-runIfLocal(gameScreen, __name__)
+runIfLocal(worldInfo, __name__)

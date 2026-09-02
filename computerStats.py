@@ -1,19 +1,20 @@
 # import keyboard
+# import keyboard
 import pyautogui
 import time
 import psutil
 import datetime
 import tkinter as tk
 from SCWindow import SCWindow, runIfLocal
+import tkinter as tk
+from SCWindow import SCWindow, runIfLocal
 
 
 class computerStatsWindow(SCWindow):
-    def __init__(self, parent=None, title='Stellar Client Computer Stats', geometry="800x1200"):
-        super().__init__(parent, title, geometry)
-    def __post_init__(self):
+    def __init__(self, parent=None, title='Stellar Client Computer Stats', geometry="800x1200", periodicRate = 1000):
+        super().__init__(parent, title, geometry, periodicRate)
+
         self.size = pyautogui.size()
-        self.timerJob = None
-        self.isRunning = None
 
     def show(self):
         if self.window is not None and self.window.winfo_exists():
@@ -46,8 +47,7 @@ class computerStatsWindow(SCWindow):
 
         self.warningLabel = tk.Label(
             contentFrame,
-            text="WARNING: This program WILL lag your computer, you may need to end it's task/use alt+4",
-            font=(
+            text="WARNING: This program may lag your computer, you may need to end its task/use alt+4",            font=(
                 'Castellar',
                 12,
                 'bold'
@@ -77,33 +77,34 @@ class computerStatsWindow(SCWindow):
         self.statsText.pack(side='left', fill='both', expand=True)
         scrollbar.config(command=self.statsText.yview)
 
-        instructions = tk.Label(
-            contentFrame,
-            font=(
-                'Cascadia Code',
-                10,
-            ),
-            bg='gray',
-            fg='black'
-        )
-        instructions.pack(pady=(10, 0))
+        # instructions = tk.Label(
+        #     contentFrame,
+        #     font=(
+        #         'Cascadia Code',
+        #         10,
+        #     ),
+        #     bg='gray',
+        #     fg='black'
+        # )
+        # instructions.pack(pady=(10, 0))
         
     def periodic(self):
+        if not self.isRunning or not self.window or not self.window.winfo_exists():
+            return
+        
         if not self.isRunning or not self.window or not self.window.winfo_exists():
             return
         
         startTime = time.time() * 1000
         text = ''
         text += '-------Screen Stats-------\n'
-        text += f'Screen Dimentions: {self.size}\n'
-
+        text += f'Screen Dimensions: {self.size}\n'
         text += '-------CPU-------\n'
         try:
             text += f'CPU Usage: {psutil.cpu_percent(None)}\n'
             text += f'CPU Usage per CPU: {psutil.cpu_percent(None, True)}\n'
         except:
-            text += 'CPU info not avalible, '
-
+            text += 'CPU info not available, '
         text += '-------RAM-------\n'
         memoryInfo = psutil.virtual_memory()
         text += f'Total RAM: {memoryInfo.total / (1024**3):.2f} GB\n'
@@ -164,9 +165,6 @@ class computerStatsWindow(SCWindow):
         self.statsText.delete('1.0', tk.END)
         self.statsText.insert('1.0', text)
         self.statsText.config(state='disabled')
-
-        if self.isRunning and self.window and self.window.winfo_exists():
-            self.timerJob = self.window.after(1000, self.periodic)
     
     def stopMonitor(self):
         self.isRunning = False

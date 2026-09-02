@@ -1,18 +1,23 @@
 from macros import macroWindow
 from encoder import encodingWindow
 from computerStats import computerStatsWindow
+from macros import macroWindow
+from encoder import encodingWindow
+from computerStats import computerStatsWindow
 from keylogger import keyLog
+from sorts import sortingPage
 from SCWindow import SCWindow, runIfLocal
 import tkinter as tk
 
 class keyboardWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Keyboard Util', geometry="800x600"):
         super().__init__(parent, title, geometry)
-    def __post_init__(self):
+
         self.macroWindow = None
         self.encodeWindow = None
         self.keylogWindow = None
         self.computerStatsWindow = None
+        self.sorterWindow = None
         
     def createCustomWidgets(self, mainFrame):
         keyboardUtilHeaderFrame = tk.Frame(mainFrame, bg='white')
@@ -85,6 +90,19 @@ class keyboardWindow(SCWindow):
             command=self.computerStats
         )
         computerStatsButton.pack(side='left', fill='both', padx=10, expand=False)
+
+        sortingButton = tk.Button(
+            contentFrame,
+            text="Sorter",
+            font=(
+                "Arial",
+                12
+            ),
+            bg='grey',
+            fg='black',
+            command=self.sorter
+        )
+        sortingButton.pack(side='left', fill='both', padx=10, expand=False)
             
     def macro(self):
         if self.macroWindow == None:
@@ -102,7 +120,12 @@ class keyboardWindow(SCWindow):
     def computerStats(self):
         if self.computerStatsWindow == None:
             self.computerStatsWindow = computerStatsWindow(self.window)
-        self.computerStatsWindow.show()    
+        self.computerStatsWindow.show()
+    
+    def sorter(self):
+        if self.sorterWindow == None:
+            self.sorterWindow = sortingPage(self.window)
+        self.sorterWindow.show()
 
 
 runIfLocal(keyboardWindow, __name__)

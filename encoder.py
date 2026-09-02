@@ -1,17 +1,16 @@
 """Encoding Function for the Stellar Client app
 Basic key based encryption, uses tkinter to get input for the key and string
 
-Returns a print statment and the encrypted/decrypted value
+Returns a print statement and the encrypted/decrypted value
 
 # Args:
     ##  Optional:
     ### - key -- The value that is used for encryption and decryption
-    ### - encrypted/decrypted -- The acutal string to be modified
+    ### - encrypted/decrypted -- The actual string to be modified
 
 # Returns:
     ### - Encrypted/Decrypted
 """
-
 import tkinter as tk
 import tkinter.messagebox as tkmb
 import tkinter.simpledialog as tksd
@@ -21,7 +20,9 @@ from SCWindow import SCWindow, runIfLocal
 def encode(key: int = None, decrypted: str = None):    
     while key == None:
         key = tksd.askinteger('Encryption Key', 'Please input your encryption key')
+        key = tksd.askinteger('Encryption Key', 'Please input your encryption key')
     while decrypted == None:
+        decrypted = tksd.askstring('Encryption String', 'Please input the string to encode')
         decrypted = tksd.askstring('Encryption String', 'Please input the string to encode')
     encrypted = ''
 
@@ -35,7 +36,9 @@ def encode(key: int = None, decrypted: str = None):
 def decode(key: int = None, encrypted: str = None):
     while key == None:
         key = tksd.askinteger('Decryption Key', 'Please input your decryption key')
+        key = tksd.askinteger('Decryption Key', 'Please input your decryption key')
     while encrypted == None:
+        encrypted = tksd.askstring('Decryption String', 'Please input the string to decode')
         encrypted = tksd.askstring('Decryption String', 'Please input the string to decode')
     decrypted = ''
 
@@ -47,8 +50,9 @@ def decode(key: int = None, encrypted: str = None):
     return decrypted
 
 class encodingWindow(SCWindow):
-    def __init__(self, parent=None, title='Stellar Client Encryption', geometry="800x600"):
+    def __init__(self, parent=None, title='Stellar Client Encryption', geometry="1000x800"):
         super().__init__(parent, title, geometry)
+    
     def createCustomWidgets(self, mainFrame):
         encoderHeaderFrame = tk.Frame(mainFrame, bg='white')
         encoderHeaderFrame.pack(fill='x', pady=(0, 10))
@@ -91,7 +95,7 @@ class encodingWindow(SCWindow):
             fg='black',
             height=2
         )
-        self.textInput.pack(padx=int(self.geometry[0:3])/6, pady=(10, 0))
+        self.textInput.pack(padx=int((self.geometry.split("x")[0]))/6, pady=(10, 0))
 
         keyLabel = tk.Label(
             contentFrame,
@@ -118,7 +122,7 @@ class encodingWindow(SCWindow):
 
         )
         self.keyInput.tag_configure("centre", justify='center')
-        self.keyInput.pack(padx=int(self.geometry[0:3])/6, pady=(10, 10))
+        self.keyInput.pack(padx=int(self.geometry.split("x")[0])/6, pady=(10, 10))
 
         buttonFrame = tk.Frame(contentFrame)
         buttonFrame.pack(fill=('y'), pady=(0, 10))
@@ -159,12 +163,11 @@ class encodingWindow(SCWindow):
             fg='black',
             height=2,
         )
-        self.output.pack(padx=int(self.geometry[0:3])/6, pady=(10, 10), expand=False)
+        self.output.pack(padx=int(self.geometry.split("x")[0])/6, pady=(10, 10), expand=False)
         self.output.config(state='disabled')
 
     def periodic(self):
         self.keyInput.tag_add("centre", "1.0", tk.END)
-        self.window.after(1, self.periodic)
 
     def encodeInputs(self):
         text = self.textInput.get('1.0', tk.END).strip()

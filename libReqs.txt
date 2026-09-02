@@ -2,3 +2,5 @@ keyboard
 pyautogui
 pygame
 PyQt5
+newspaper3k
+requests Pillow
