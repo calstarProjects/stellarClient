@@ -27,7 +27,10 @@ jobs:
 
       - name: Build app with PyInstaller
         run: |
-          pyinstaller --onefile --windowed stellarClient.py --add-data="keyboardScreen.py;." --add-data="gameScreen.py;."
+          pyinstaller --onefile --windowed stellarClient.py `
+              --add-data="*.py;." `
+              --add-data="keylog.txt;." `
+              --add-data="util;util"     
           mkdir dist-artifacts
           Copy-Item -r dist/* dist-artifacts/
 
