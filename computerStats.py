@@ -134,7 +134,7 @@ class computerStatsWindow(SCWindow):
         text += '-------UPTIME-------\n'
         boot_time_timestamp = psutil.boot_time()
         boot_time_datetime = datetime.datetime.fromtimestamp(boot_time_timestamp)
-        text += f'Boot Time: {boot_time_datetime.strftime('%Y-%m-%d %H:%M:%S')}\n'
+        text += f"Boot Time: {boot_time_datetime.strftime('%Y-%m-%d %H:%M:%S')}\n"
 
         current_time = datetime.datetime.now()
         uptime = current_time - boot_time_datetime
