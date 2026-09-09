@@ -30,7 +30,7 @@ jobs:
           pyinstaller --onefile --windowed stellarClient.py \
               --add-data="*.py:." \
               --add-data="keylog.txt:." \
-              --add-data="*util:util" \
+              --add-data="*util:util"
           mkdir dist-artifacts
           cp -r dist/* dist-artifacts/
 
