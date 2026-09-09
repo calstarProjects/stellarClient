@@ -1,7 +1,8 @@
+Pillow
+PyQt5
 keyboard
+newspaper3k
+psutil
 pyautogui
 pygame
-PyQt5
-newspaper3k
-requests 
-Pillow
+requests
