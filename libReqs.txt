@@ -1,5 +1,6 @@
 Pillow
 PyQt5
+dotenv
 keyboard
 newspaper3k
 psutil
