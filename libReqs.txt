@@ -7,6 +7,5 @@ psutil
 pyautogui
 pygame
 requests
-
 newspaper3k
 requests Pillow
