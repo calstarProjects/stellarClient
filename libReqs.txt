@@ -1,6 +1,12 @@
+Pillow
+PyQt5
+dotenv
 keyboard
+newspaper3k
+psutil
 pyautogui
 pygame
-PyQt5
+requests
+
 newspaper3k
 requests Pillow

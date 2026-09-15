@@ -1,4 +1,4 @@
-name: Build Mac App
+name: Build Win App
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-macos:
-    runs-on: macos-latest
+  build-win:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -27,15 +27,15 @@ jobs:
 
       - name: Build app with PyInstaller
         run: |
-          pyinstaller --onefile --windowed stellarClient.py \
-              --add-data="*.py:." \
-              --add-data="keylog.txt:." \
-              --add-data="*util:util"
+          pyinstaller --onefile --windowed stellarClient.py `
+              --add-data="*.py;." `
+              --add-data="keylog.txt;." `
+              --add-data="util;util"     
           mkdir dist-artifacts
-          cp -r dist/* dist-artifacts/
+          Copy-Item -r dist/* dist-artifacts/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MacApp
+          name: WinApp
           path: dist-artifacts

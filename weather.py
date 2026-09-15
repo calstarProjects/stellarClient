@@ -124,7 +124,8 @@ class weatherWindow(SCWindow):
         self.temperatureBox.insert(tk.END, f"Location: {weather['Location']}\n")
         self.temperatureBox.insert(tk.END, f"Temperature: {weather['Temperature']}°C\n")
         self.temperatureBox.insert(tk.END, f"Conditions: {weather['Conditions'].capitalize()}\n")
-        self.temperatureBox.insert(tk.END, f"Temperature High/Low: {str(weather['High/Low']).strip('(').strip(')').replace("'", "")}\n")
+        tempHighLow = str(weather['High/Low']).strip('(').strip(')').replace("'", "")
+        self.temperatureBox.insert(tk.END, f"Temperature High/Low: {tempHighLow}\n")
         wind = weather['Wind']
         speed = wind.get('speed', 'N/A')
         deg = wind.get('deg', 'N/A')

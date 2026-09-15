@@ -1,5 +1,5 @@
 .vscode/settings.json
 .env
 silly.py
-chatHistory.txt
+.envchatHistory.txt
 /__pycache__

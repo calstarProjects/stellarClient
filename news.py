@@ -50,7 +50,7 @@ class newsWindow(SCWindow):
         self.articleText.delete('1.0', tk.END)
         self.articleText.insert(
             '1.0',
-            f'{dt['Title']}\n{dt["Author"]}\nDate: {dt["Date"]}\n{dt["Text"]}'
+            f'{dt["Title"]}\n{dt["Author"]}\nDate: {dt["Date"]}\n{dt["Text"]}'
         )
         self.articleText.config(state='disabled')
     
