@@ -12,7 +12,7 @@ from SCWindow import SCWindow, runIfLocal
 
 class computerStatsWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Computer Stats', geometry="800x1200", periodicRate = 1000):
-        super().__init__(parent, title, geometry, periodicRate)
+        super().__init__(parent, title, geometry, periodicRate, doesPeriodic=True)
 
         self.size = pyautogui.size()
 

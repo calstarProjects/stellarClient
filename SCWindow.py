@@ -1,3 +1,5 @@
+from threading import Thread
+import time
 import tkinter as tk
 
 class SCWindow:
@@ -50,12 +52,13 @@ class SCWindow:
         extraHeader.pack(expand=True)
     """
 
-    def __init__(self, parent = None, title = 'Stellar Client', geometry = "800x600", periodicRate = 1):
+    def __init__(self, parent = None, title: str = 'Stellar Client', geometry: str = "800x600", periodicRate: int = 1, doesPeriodic: bool = True):
         self.parent = parent
         self.window = None
         self.title = title
         self.geometry = geometry
         self.periodicRate = periodicRate
+        self.doesPeriodic = doesPeriodic
 
     def __str__(self):
         return self.title
@@ -130,6 +133,8 @@ class SCWindow:
         pass
 
     def periodicLoop(self):
+        if self.window == None:
+            return
         self.window.after(self.periodicRate, self.periodic)
         self.window.after(self.periodicRate, self.periodicLoop)
     
@@ -150,8 +155,13 @@ def runIfLocal(window: type[SCWindow], name:str):
             app.show()
             print(repr(app))
             app.onStart()
-            app.periodicLoop()
+            if app.doesPeriodic:
+                thread = Thread(target=app.periodicLoop)
+                thread.start()
             app.window.mainloop()
+            while thread.is_alive() and app.doesPeriodic:
+                print("Waiting for thread to end...")
+                time.sleep(0.5)
             print("Ended Successfully!")
         except Exception as e:
             if app is not None:

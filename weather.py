@@ -9,7 +9,7 @@ from SCWindow import SCWindow, runIfLocal
 
 class weatherWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Weather', geometry="1000x600"):
-        super().__init__(parent, title, geometry)
+        super().__init__(parent, title, geometry, doesPeriodic=True)
     
     def createCustomWidgets(self, mainFrame):
         self.weatherFrame = tk.Frame(mainFrame, bg="white")
@@ -136,8 +136,11 @@ class weatherWindow(SCWindow):
         self.temperatureBox.insert(tk.END, f"Wind: Speed: {speed_str}, Degrees: {deg_str}, Gust: {gust_str}\n")
         self.temperatureBox.config(state='disabled')
     
+    def periodic(self):
+        self.update()
+    
     def onStart(self):
-        self.update() # TODO: make threaded maybe, need discussion
+        pass
 
 
 runIfLocal(weatherWindow, __name__)

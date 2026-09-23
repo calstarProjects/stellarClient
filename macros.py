@@ -65,12 +65,16 @@ def runMacro(chosenMacro: str, key: str = None):
             match chosenMacro:
                 case 'autoClick':
                     autoClick()
+                    break
                 case 'circle':
                     circle(iteration)
+                    break
                 case 'autoKey':
                     autoKey(key)
+                    break
                 case 'holdKey':
                     holdKey(key)
+                    break
             iteration += 1
         if chosenMacro == 'holdKey':
             holdKey(key, True)
