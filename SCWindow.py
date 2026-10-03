@@ -84,7 +84,8 @@ class SCWindow:
         self.window.deiconify()
         self.window.iconbitmap(r'util\stellarClientLogo.ico')
         icon = tk.PhotoImage(file=r'util\stellarClientLogo.png')
-        self.window.iconphoto(True, icon)
+        if icon == tk.PhotoImage:
+            self.window.iconphoto(True, icon)
 
         self.createWidgets()
 
@@ -153,7 +154,7 @@ def runIfLocal(window: type[SCWindow], name:str):
         try:
             app = window()
             app.show()
-            print(repr(app))
+            # print(repr(app))
             app.onStart()
             if app.doesPeriodic:
                 thread = Thread(target=app.periodicLoop)

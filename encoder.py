@@ -49,7 +49,7 @@ def decode(key: int = None, encrypted: str = None):
     print(decrypted)
     return decrypted
 
-class encodingWindow(SCWindow):
+class EncodingWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Encryption', geometry="1000x800"):
         super().__init__(parent, title, geometry)
     
@@ -199,4 +199,4 @@ class encodingWindow(SCWindow):
         self.output.config(state='disabled')    
 
 
-runIfLocal(encodingWindow, __name__)
+runIfLocal(EncodingWindow, __name__)

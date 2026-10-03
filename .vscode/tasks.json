@@ -4,7 +4,7 @@
         {
             "label": "runMainScipt",
             "type": "shell",
-            "command": "localVenv/scripts/python.exe stellarClient.py",
+            "command": "localVenv/scripts/python.exe StellarClient.py",
             "problemMatcher": [
                 "$python"
             ]

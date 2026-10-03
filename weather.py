@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from SCWindow import SCWindow, runIfLocal
 
-class weatherWindow(SCWindow):
+class WeatherWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Weather', geometry="1000x600"):
         super().__init__(parent, title, geometry, doesPeriodic=True)
     
@@ -143,4 +143,4 @@ class weatherWindow(SCWindow):
         pass
 
 
-runIfLocal(weatherWindow, __name__)
+runIfLocal(WeatherWindow, __name__)

@@ -6,7 +6,7 @@ from SCWindow import SCWindow, runIfLocal
 
 screenwidth, screenlength = pyautogui.size()
 
-class gameScreen(SCWindow):
+class GameScreen(SCWindow):
     def __init__(self, parent = None, title = 'Stellar Client Games', geometry = '800x600'):
         super().__init__(parent, title, geometry)
     
@@ -61,7 +61,7 @@ class gameScreen(SCWindow):
         gameTwoButton.pack(side='left', fill='both', padx=(5, 0), expand=False)    
 
     def gameOne(self):
-        from gameOne import initGameOne
+        from GameOne import initGameOne
         initGameOne()        
 
-runIfLocal(gameScreen, __name__)
+runIfLocal(GameScreen, __name__)

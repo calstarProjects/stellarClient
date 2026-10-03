@@ -1,9 +1,9 @@
 from SCWindow import SCWindow, runIfLocal
-from weather import weatherWindow
-from news import newsWindow
+from Weather import WeatherWindow
+from News import NewsWindow
 import tkinter as tk
 
-class worldInfo(SCWindow):
+class WorldInfo(SCWindow):
     def __init__(self, parent = None, title = 'Stellar Client Games', geometry = '800x400'):
         super().__init__(parent, title, geometry)
         self.weatherWindow = None
@@ -61,7 +61,7 @@ class worldInfo(SCWindow):
 
     def weather(self):
         if self.weatherWindow == None:
-            self.weatherWindow = weatherWindow(self.window)
+            self.weatherWindow = WeatherWindow(self.window)
         self.weatherWindow.show()
         
     def news(self):
@@ -69,4 +69,4 @@ class worldInfo(SCWindow):
             self.newsWindow = newsWindow(self.window)
         self.newsWindow.show()              
 
-runIfLocal(worldInfo, __name__)
+runIfLocal(WorldInfo, __name__)

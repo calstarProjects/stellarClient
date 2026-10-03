@@ -71,7 +71,7 @@ def qSort(lis: list):
             finalList.append(j)
     return finalList
 
-class sortingPage(SCWindow):
+class SortingPage(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Sorter', geometry="800x600"):
         super().__init__(parent, title, geometry)
 
@@ -158,4 +158,4 @@ class sortingPage(SCWindow):
         self.outputBox.config(state='disabled')
 
 
-runIfLocal(sortingPage, __name__)
+runIfLocal(SortingPage, __name__)

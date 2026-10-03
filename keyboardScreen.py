@@ -1,15 +1,12 @@
-from macros import macroWindow
-from encoder import encodingWindow
-from computerStats import computerStatsWindow
-from macros import macroWindow
-from encoder import encodingWindow
-from computerStats import computerStatsWindow
-from keylogger import keyLog
-from sorts import sortingPage
+from Macros import MacroWindow
+from Encoder import EncodingWindow
+from ComputerStats import ComputerStatsWindow
+from Keylogger import keyLog
+from Sorts import SortingPage
 from SCWindow import SCWindow, runIfLocal
 import tkinter as tk
 
-class keyboardWindow(SCWindow):
+class KeyboardWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Keyboard Util', geometry="800x600"):
         super().__init__(parent, title, geometry)
 
@@ -106,12 +103,12 @@ class keyboardWindow(SCWindow):
             
     def macro(self):
         if self.macroWindow == None:
-            self.macroWindow = macroWindow(self.window)
+            self.macroWindow = MacroWindow(self.window)
         self.macroWindow.show()
     
     def encoder(self):
         if self.encodeWindow == None:
-            self.encodeWindow = encodingWindow(self.window)
+            self.encodeWindow = EncodingWindow(self.window)
         self.encodeWindow.show()
     
     def keylog(self):
@@ -119,13 +116,13 @@ class keyboardWindow(SCWindow):
 
     def computerStats(self):
         if self.computerStatsWindow == None:
-            self.computerStatsWindow = computerStatsWindow(self.window)
+            self.computerStatsWindow = ComputerStatsWindow(self.window)
         self.computerStatsWindow.show()
     
     def sorter(self):
         if self.sorterWindow == None:
-            self.sorterWindow = sortingPage(self.window)
+            self.sorterWindow = SortingPage(self.window)
         self.sorterWindow.show()
 
 
-runIfLocal(keyboardWindow, __name__)
+runIfLocal(KeyboardWindow, __name__)

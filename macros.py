@@ -85,7 +85,7 @@ def runMacro(chosenMacro: str, key: str = None):
     tkmb.showinfo('Task Finished', (f'Desired Minutes = {str(desiredMins)}, Start Seconds = {str(startSecs)}, Desired End Time = {str(desiredEndTime)}, Start Time {str(startTime)}, End Time {str(time.ctime(time.time()))}'))
     print('boxed')
 
-class macroWindow(SCWindow):
+class MacroWindow(SCWindow):
     def __init__(self, parent=None, title='Stellar Client Macros', geometry="800x600"):
         super().__init__(parent, title, geometry)
 
@@ -170,4 +170,4 @@ class macroWindow(SCWindow):
     def runHoldKey(self):
         runMacro('holdKey', getInfo('holdKey'))
 
-runIfLocal(macroWindow, __name__)
+runIfLocal(MacroWindow, __name__)

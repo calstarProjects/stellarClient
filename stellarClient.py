@@ -18,11 +18,11 @@ In Progress:
 
 import sys
 import pyautogui
-from keyboardScreen import keyboardWindow
-from encoder import encodingWindow
-from gameScreen import gameScreen
+from keyboardScreen import KeyboardWindow
+from encoder import EncodingWindow
+from GameScreen import GameScreen
 from SCWindow import SCWindow, runIfLocal
-from worldInfo import worldInfo
+from WorldInfo import WorldInfo
 import tkinter as tk
 
 screenwidth, screenlength = pyautogui.size()
@@ -83,17 +83,17 @@ class stellarClientWindow(SCWindow):
     
     def keyboard(self):
         if self.keyboardWindow == None:
-            self.keyboardWindow = keyboardWindow(self.window)
+            self.keyboardWindow = KeyboardWindow(self.window)
         self.keyboardWindow.show()
 
     def games(self):
         if self.gamesWindow == None:
-            self.gamesWindow = gameScreen(self.window)
+            self.gamesWindow = GameScreen(self.window)
         self.gamesWindow.show()
 
     def worldInfo(self):
         if self.worldNewsWindow == None:
-            self.worldNewsWindow = worldInfo(self.window) 
+            self.worldNewsWindow = WorldInfo(self.window) 
         self.worldNewsWindow.show()
 
 runIfLocal(stellarClientWindow, __name__)
