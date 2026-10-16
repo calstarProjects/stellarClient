@@ -8,7 +8,7 @@ import pprint
 from SCWindow import SCWindow, runIfLocal
 
 class ArticleWindow(SCWindow):
-    def __init__(self, text, parent=None, title = 'Stellar Client Article', geometry = "800x600", periodicRate = 1, doesPeriodic = True):
+    def __init__(self, text, parent=None, title = 'Stellar Client Article', geometry = "900x700", periodicRate = 1, doesPeriodic = True):
         super().__init__(parent, f"{title} (Stellar Client Article)", geometry, periodicRate, doesPeriodic)
         self.text = text
     
@@ -38,7 +38,7 @@ class ArticleWindow(SCWindow):
         self.textBox.config(state='disabled')
 
 class NewsWindow(SCWindow):
-    def __init__(self, parent=None, title='Stellar Client News', geometry="800x600"):
+    def __init__(self, parent=None, title='Stellar Client News', geometry="800x800"):
         super().__init__(parent, title, geometry)
         self.articleButtons = []
         self.articleWindows = []
@@ -49,6 +49,19 @@ class NewsWindow(SCWindow):
             bg='white'
         )
         self.newsFrame.pack(fill='x', pady=(0, 10))
+
+        title = tk.Label(
+            self.newsFrame,
+            font=(
+                'Castellar',
+                30
+            ),
+            bg='white',
+            fg='black',
+            state='normal',
+            text="News"
+        )
+        title.pack(pady=(0, 10))
 
         self.searchBox = tk.Text(
             self.newsFrame,
@@ -108,13 +121,14 @@ class NewsWindow(SCWindow):
         for i in dt["articles"]:
             options.append((i["title"], i["url"]))
             optionsStr += f'{i["title"]}, {i["url"]}\n'
-        return options, optionsStr
+        return options
 
     def search(self):
         for i in range(len(self.articleButtons)):
             self.articleButtons[i].destroy()
+        self.articleButtons = []
         self.window.children.clear()
-        options, optionsStr = self.compileSources()
+        options = self.compileSources()
         for i in range(len(options)):
                 self.newsFrame,
                 self.articleButtons.append(
